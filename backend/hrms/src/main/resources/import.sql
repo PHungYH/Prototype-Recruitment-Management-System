@@ -41,8 +41,8 @@ CREATE TABLE employee_details (
 
 -- EMPLOYEE PROFILES table
 CREATE TABLE employee_profiles (
-    prof_id INT PRIMARY KEY AUTO_INCREMENT,
-    surname VARCHAR(50) NOT NULL,
+    emp_prof_id INT PRIMARY KEY AUTO_INCREMENT,
+    lastname VARCHAR(50) NOT NULL,
     firstname VARCHAR(50) NOT NULL,
     alias VARCHAR(50),
     idcard VARCHAR(20) NOT NULL,
@@ -61,19 +61,19 @@ CREATE TABLE employee_profiles (
 -- EMPLOYEES table
 CREATE TABLE employees (
     emp_id INT PRIMARY KEY AUTO_INCREMENT,
-    login VARCHAR(100) NOT NULL,
+    username VARCHAR(100) NOT NULL,
     role_id INT NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     emp_det_id INT NOT NULL,
-    prof_id INT NOT NULL,
+    emp_prof_id INT NOT NULL,
     CONSTRAINT fk_roles FOREIGN KEY (role_id) REFERENCES roles(role_id),
     CONSTRAINT fk_employee_details FOREIGN KEY (emp_det_id) REFERENCES employee_details(emp_det_id),
-    CONSTRAINT fk_employee_profiles FOREIGN KEY (prof_id) REFERENCES employee_profiles(prof_id)
+    CONSTRAINT fk_employee_profiles FOREIGN KEY (emp_prof_id) REFERENCES employee_profiles(emp_prof_id)
 );
 
 -- APPLICANT PROFILES table
 CREATE TABLE applicant_profiles (
-    prof_id INT PRIMARY KEY AUTO_INCREMENT,
+    appl_prof_id INT PRIMARY KEY AUTO_INCREMENT,
     surname VARCHAR(50) NOT NULL,
     firstname VARCHAR(50) NOT NULL,
     alias VARCHAR(50),
@@ -88,8 +88,8 @@ CREATE TABLE applicant_profiles (
 -- APPLICANTS table
 CREATE TABLE applicants (
     appl_id INT PRIMARY KEY AUTO_INCREMENT,
-    login VARCHAR(100) NOT NULL,
+    username VARCHAR(100) NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
-    prof_id INT NOT NULL,
-    CONSTRAINT fk_applicant_profiles FOREIGN KEY (prof_id) REFERENCES applicant_profiles(prof_id)
+    appl_prof_id INT NOT NULL,
+    CONSTRAINT fk_applicant_profiles FOREIGN KEY (appl_prof_id) REFERENCES applicant_profiles(appl_prof_id)
 );

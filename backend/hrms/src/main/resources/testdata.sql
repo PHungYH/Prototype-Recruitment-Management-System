@@ -30,7 +30,7 @@ INSERT INTO employee_details (dept_id, position_id, date_of_joining, emp_type_id
 (3, 3, '2025-04-01', 2, 10000.00);
 
 -- Insert sample employee profiles
-INSERT INTO employee_profiles (surname, firstname, idcard, date_of_birth, gender) VALUES 
+INSERT INTO employee_profiles (lastname, firstname, idcard, date_of_birth, gender) VALUES 
 ('Hung', 'Peter', 'A1234567', '1990-01-01', 'F'),
 ('Xue', 'Chun', 'B2345678', '1992-02-02', 'M'),
 ('Keung', 'Wai', 'C3456789', '1994-03-03', 'M'),
@@ -38,7 +38,7 @@ INSERT INTO employee_profiles (surname, firstname, idcard, date_of_birth, gender
 
 -- Insert sample employees
 -- Raw: P@ssw0rd, Hashed password: $2a$10$9m7pR.K04NZSpYzibpl64uGCt6.sdcq/WkCEMh3LKR2/L3Yijvrya
-INSERT INTO employees (login, role_id, password_hash, emp_det_id, prof_id) VALUES
+INSERT INTO employees (username, role_id, password_hash, emp_det_id, emp_prof_id) VALUES
 ('phung', 1, '$2a$10$9m7pR.K04NZSpYzibpl64uGCt6.sdcq/WkCEMh3LKR2/L3Yijvrya', 1, 1),
 ('jxue', 2, '$2a$10$9m7pR.K04NZSpYzibpl64uGCt6.sdcq/WkCEMh3LKR2/L3Yijvrya', 2, 2),
 ('jkeung', 3, '$2a$10$9m7pR.K04NZSpYzibpl64uGCt6.sdcq/WkCEMh3LKR2/L3Yijvrya', 3, 3),
