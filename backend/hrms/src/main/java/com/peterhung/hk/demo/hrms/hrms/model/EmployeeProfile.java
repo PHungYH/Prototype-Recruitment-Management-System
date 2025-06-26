@@ -29,7 +29,6 @@ public class EmployeeProfile {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    private String email;
     private String address;
 
     @Column(name = "emergency_contact_name")
@@ -109,14 +108,6 @@ public class EmployeeProfile {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getAddress() {

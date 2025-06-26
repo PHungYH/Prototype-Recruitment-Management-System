@@ -8,6 +8,7 @@ public class EmploymentType {
     @Id
     @Column(name="emp_type_id")
     private int id;
+    @Column(name="emp_type_name")
     private String name;
 
     public int getId() {return id;}

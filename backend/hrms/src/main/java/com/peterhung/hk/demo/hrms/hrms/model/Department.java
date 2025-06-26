@@ -8,6 +8,7 @@ public class Department {
     @Id
     @Column(name="dept_id")
     private int id;
+    @Column(name="dept_name")
     private String name;
 
     public int getId() {return id;}

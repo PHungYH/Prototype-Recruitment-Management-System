@@ -8,6 +8,7 @@ public class Role {
     @Id
     @Column(name="role_id")
     private int id;
+    @Column(name="role_name")
     private String name;
 
     public int getId() {return id;}

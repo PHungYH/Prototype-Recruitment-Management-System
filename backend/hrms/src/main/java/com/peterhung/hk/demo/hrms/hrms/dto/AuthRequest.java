@@ -2,25 +2,25 @@ package com.peterhung.hk.demo.hrms.hrms.dto;
 
 // DTO = data transfer object
 // Request json object for authentication
-// Example: {"username": "user", "password": "pass"}
+// Example: {"usernameOrEmail": "user", "password": "pass"}
 public class AuthRequest {
-	private String username;
+	private String usernameOrEmail;
 	private String password;
 
 	public AuthRequest() {
 	}
 
-	public AuthRequest(String username, String password) {
-		this.username = username;
+	public AuthRequest(String usernameOrEmail, String password) {
+		this.usernameOrEmail = usernameOrEmail;
 		this.password = password;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getUsernameOrEmail() {
+		return usernameOrEmail;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setUsernameOrEmail(String usernameOrEmail) {
+		this.usernameOrEmail = usernameOrEmail;
 	}
 
 	public String getPassword() {

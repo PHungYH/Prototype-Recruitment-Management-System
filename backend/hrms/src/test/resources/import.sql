@@ -1,4 +1,4 @@
-DROP DATABASE IF EXISTS platform;
+DROP DATABASE platform;
 CREATE DATABASE platform; 
 
 -- ROLES table

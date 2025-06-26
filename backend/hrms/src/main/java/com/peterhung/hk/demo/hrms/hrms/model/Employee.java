@@ -9,6 +9,7 @@ public class Employee {
     @Column(name = "emp_id")
     private int id;
     private String username;
+    private String email;
     
     @ManyToOne
     @JoinColumn(name="role_id")
@@ -19,6 +20,8 @@ public class Employee {
 
 
     public int getId() {return id;}
+
+    public String getEmail() {return email;}
 
     public String getUserName() {return username;}
 

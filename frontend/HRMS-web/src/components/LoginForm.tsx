@@ -4,13 +4,13 @@ import axios from 'axios';
 import appGlobal from '../utils/AppGlobal';
 
 const LoginForm = () => {
-  const [username, setUsername] = useState('');
+  const [usernameOrEmail, setUsernameEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = async () => {
     try {
       const response = await axios.post(`${appGlobal.getApiUrl()}/login`, {
-        username,
+        usernameOrEmail,
         password,
       });
       localStorage.setItem('token', response.data.token);
@@ -22,7 +22,7 @@ const LoginForm = () => {
 
   return (
     <div>
-      <input placeholder="Username" onChange={e => setUsername(e.target.value)} />
+      <input placeholder="Username or Email" onChange={e => setUsernameEmail(e.target.value)} />
       <input type="password" placeholder="Password" onChange={e => setPassword(e.target.value)} />
       <button onClick={handleLogin}>Login</button>
     </div>
