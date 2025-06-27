@@ -61,7 +61,7 @@ CREATE TABLE employee_profiles (
 CREATE TABLE employees (
     emp_id INT PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(100) NOT NULL,
-    email VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
     role_id INT NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     emp_det_id INT NOT NULL,

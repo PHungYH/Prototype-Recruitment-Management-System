@@ -18,16 +18,20 @@ public class Employee {
     @Column(name="password_hash")
     private String passwordHash;
 
+    @OneToOne
+    @JoinColumn(name = "emp_prof_id")
+    private EmployeeProfile profile;
+
 
     public int getId() {return id;}
 
     public String getEmail() {return email;}
 
-    public String getUserName() {return username;}
+    public String getUsername() {return username;}
 
     public Role getRole() {return role;}
 
     public String getPasswordHash() {return passwordHash;}
 
-
+    public EmployeeProfile getProfile() {return profile;}
 }

@@ -1,6 +1,5 @@
 package com.peterhung.hk.demo.hrms.hrms.service;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +18,7 @@ public class AuthService {
     } 
  
     public boolean authenticate(String usernameOrEmail, String rawPassword) { 
-        Employee employee = employeeRepository.findByEmailOrUsername(usernameOrEmail, usernameOrEmail);
+        Employee employee = employeeRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
         if (employee != null) {
             return passwordEncoder.matches(rawPassword, employee.getPasswordHash());
         }
