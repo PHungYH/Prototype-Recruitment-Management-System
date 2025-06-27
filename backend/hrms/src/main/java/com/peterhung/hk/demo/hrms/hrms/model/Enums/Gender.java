@@ -1,8 +1,8 @@
 package com.peterhung.hk.demo.hrms.hrms.model.Enums;
 
 public enum Gender {
-    MALE('M'),
-    FEMALE('F');
+    M('M'),
+    F('F');
 
     private final char code;
 
@@ -16,8 +16,8 @@ public enum Gender {
 
     public static Gender fromCode(char code) {
         return switch (Character.toUpperCase(code)) {
-            case 'M' -> MALE;
-            case 'F' -> FEMALE;
+            case 'M' -> M;
+            case 'F' -> F;
             default -> throw new IllegalArgumentException("Unknown gender code: " + code);
         };
     }
