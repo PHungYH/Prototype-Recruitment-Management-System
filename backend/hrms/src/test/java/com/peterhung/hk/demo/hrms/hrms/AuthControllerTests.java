@@ -66,8 +66,34 @@ public class AuthControllerTests {
 	}
 
 	@Test
+	public void testLoggedInUserByUsernameCaseSensitive() {
+		AuthRequest request = new AuthRequest(UserType.EMPLOYEE, "PHUNG", "P@ssw0rd");
+		ResponseEntity<?> response = controller.login(request);
+		assert(response.getStatusCode()).equals(HttpStatus.UNAUTHORIZED);
+	}
+
+	@Test
 	public void testLoggedInUserByEmail() {
 		AuthRequest request = new AuthRequest(UserType.EMPLOYEE, "jxue@company.com", "P@ssw0rd");
+		ResponseEntity<?> response = controller.login(request);
+		assert(response.getStatusCode()).equals(HttpStatus.OK);
+		
+		AuthResponse authResponse = (AuthResponse) response.getBody();
+		assertNotNull(authResponse);
+
+		String token = authResponse.getToken();
+		ResponseEntity<?> responseName = controller.getLoggedInUser(token, UserType.EMPLOYEE);
+		assert(responseName.getStatusCode()).equals(HttpStatus.OK);
+		CurrentUserResponse userResponse = (CurrentUserResponse) responseName.getBody();
+		assertNotNull(userResponse);
+		assert(userResponse.getUserName()).equals("jxue");
+		assert(userResponse.getProfileLastName()).equals("Xue");
+		assert(userResponse.getProfileFirstName()).equals("Chun");
+	}
+
+	@Test
+	public void testLoggedInUserByEmailCaseInsensitive() {
+		AuthRequest request = new AuthRequest(UserType.EMPLOYEE, "JXUE@company.com", "P@ssw0rd");
 		ResponseEntity<?> response = controller.login(request);
 		assert(response.getStatusCode()).equals(HttpStatus.OK);
 		
