@@ -60,7 +60,7 @@ CREATE TABLE employee_profiles (
 -- EMPLOYEES table
 CREATE TABLE employees (
     emp_id INT PRIMARY KEY AUTO_INCREMENT,
-    username VARCHAR(100) NOT NULL,
+    username VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin UNIQUE NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     role_id INT NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
@@ -87,7 +87,7 @@ CREATE TABLE applicant_profiles (
 -- APPLICANTS table
 CREATE TABLE applicants (
     appl_id INT PRIMARY KEY AUTO_INCREMENT,
-    username VARCHAR(100) NOT NULL,
+    username VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin UNIQUE NOT NULL,
     email VARCHAR(100) NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     appl_prof_id INT NOT NULL,
