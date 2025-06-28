@@ -70,26 +70,3 @@ CREATE TABLE employees (
     CONSTRAINT fk_employee_details FOREIGN KEY (emp_det_id) REFERENCES employee_details(emp_det_id),
     CONSTRAINT fk_employee_profiles FOREIGN KEY (emp_prof_id) REFERENCES employee_profiles(emp_prof_id)
 );
-
--- APPLICANT PROFILES table
-CREATE TABLE applicant_profiles (
-    appl_prof_id INT PRIMARY KEY AUTO_INCREMENT,
-    surname VARCHAR(50) NOT NULL,
-    firstname VARCHAR(50) NOT NULL,
-    alias VARCHAR(50),
-    date_of_birth DATE NOT NULL,
-    gender VARCHAR(1) NOT NULL CHECK (gender IN ('M', 'F')),
-    phone_number VARCHAR(20),
-    address VARCHAR(255),
-    nationality VARCHAR(50)
-);
-
--- APPLICANTS table
-CREATE TABLE applicants (
-    appl_id INT PRIMARY KEY AUTO_INCREMENT,
-    username VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin UNIQUE NOT NULL,
-    email VARCHAR(100) NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
-    appl_prof_id INT NOT NULL,
-    CONSTRAINT fk_applicant_profiles FOREIGN KEY (appl_prof_id) REFERENCES applicant_profiles(appl_prof_id)
-);
