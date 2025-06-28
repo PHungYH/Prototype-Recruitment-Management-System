@@ -3,12 +3,14 @@ import { useEffect, useState } from "react";
 import appGlobal from "../utils/AppGlobal";
 import { useAuthGuardPostLogin } from "../utils/ComponentsHelper/AuthGuard";
 import Button from "@mui/material/Button";
+import { AuthHelper } from "../utils/AuthHelper";
+import { useNavigate } from "react-router-dom";
 
 const EmployeePanel = () => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [profileLastname, setProfileLastName] = useState('');
-  const [profileFirstname, setProfileFirstName] = useState('');
-  const [counter, setCounter] = useState(1);
+  const [profileFirstname, setProfileFirstName] = useState('');;
 
   useAuthGuardPostLogin();
 
@@ -31,10 +33,18 @@ const EmployeePanel = () => {
 
   }, []);
 
+  const handleLogout = () => {
+    AuthHelper.clearSession();
+    alert("You are now logged out.");
+    navigate("/login");
+  }
+
   return (
     <div style={{ padding: '2rem' }}>
-      <h2>Welcome, {profileLastname} {profileFirstname} (login: {username})!</h2>
-      <Button onClick={() => setCounter(counter+1)}>{counter}</Button>
+      <div className="flex flex-wrap items-center space-x-2">
+        <h2>Welcome, {profileLastname} {profileFirstname} (login: {username})!</h2>
+        <Button variant='contained' onClick={handleLogout}>Logout</Button>
+      </div>
     </div>
   );
 }
