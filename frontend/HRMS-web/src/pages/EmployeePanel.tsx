@@ -1,30 +1,20 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import appGlobal from "../utils/AppGlobal";
-import { useNavigate } from "react-router-dom";
-import { AuthHelper } from "../utils/AuthHelper";
+import { useAuthGuardPostLogin } from "../utils/ComponentsHelper/AuthGuard";
+import Button from "@mui/material/Button";
 
 const EmployeePanel = () => {
-  const [needLogout, setNeedLogout] = useState(false);
   const [username, setUsername] = useState('');
   const [profileLastname, setProfileLastName] = useState('');
   const [profileFirstname, setProfileFirstName] = useState('');
-  const navigation = useNavigate();
+  const [counter, setCounter] = useState(1);
+
+  useAuthGuardPostLogin();
 
   useEffect(() => {
-    AuthHelper.isLoggedIn().then((result) => {
-      if (!result) {
-        // alert('Session expired. Please login again.');
-        setNeedLogout(true);
-        AuthHelper.clearSession();
-        navigation('/login');
-      }
-    })
-  }, []);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const userType = localStorage.getItem("userType");
+    const token = localStorage.getItem(appGlobal.storage_key_token);
+    const userType = localStorage.getItem(appGlobal.storage_key_userType);
     axios.get(`${appGlobal.api_url}/getLoggedInUser?userType=${userType}`, {
       headers: { token: token }
     })
@@ -43,11 +33,8 @@ const EmployeePanel = () => {
 
   return (
     <div style={{ padding: '2rem' }}>
-      {!needLogout && <>
-        <h2>Welcome, {profileLastname} {profileFirstname} (login: {username})!</h2>
-      </>
-      }
-
+      <h2>Welcome, {profileLastname} {profileFirstname} (login: {username})!</h2>
+      <Button onClick={() => setCounter(counter+1)}>{counter}</Button>
     </div>
   );
 }
