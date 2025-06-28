@@ -1,8 +1,8 @@
 -- Insert sample roles
--- HR > Admin > Normal
+-- HR > Escalated > Normal
 INSERT INTO roles (role_name) VALUES
 ('HR'),
-('Admin'),
+('Escalated'),
 ('Normal');
 
 -- Insert sample departments
