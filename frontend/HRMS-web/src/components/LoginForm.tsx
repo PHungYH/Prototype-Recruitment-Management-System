@@ -13,7 +13,7 @@ const LoginForm = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post(`${appGlobal.api_url}/login`, {
+      const response = await axios.post(`${appGlobal.api_url}${appGlobal.endpoint_auth}/login`, {
         userType,
         usernameOrEmail,
         password,

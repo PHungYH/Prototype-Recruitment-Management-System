@@ -7,7 +7,7 @@ export class AuthHelper {
         if (!token) return false;
 
         try {
-            const response = await axios.get(`${appGlobal.api_url}/validateToken`, {
+            const response = await axios.get(`${appGlobal.api_url}${appGlobal.endpoint_auth}/validateToken`, {
                 headers: { token }
             });
             return response.data.result === true;

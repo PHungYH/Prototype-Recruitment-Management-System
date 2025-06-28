@@ -17,7 +17,7 @@ import com.peterhung.hk.demo.hrms.hrms.service.Enum.UserType;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/auth")
 public class AuthController {
 	private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 	private final AuthService authService;

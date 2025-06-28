@@ -17,7 +17,7 @@ const EmployeePanel = () => {
   useEffect(() => {
     const token = localStorage.getItem(appGlobal.storage_key_token);
     const userType = localStorage.getItem(appGlobal.storage_key_userType);
-    axios.get(`${appGlobal.api_url}/getLoggedInUser?userType=${userType}`, {
+    axios.get(`${appGlobal.api_url}${appGlobal.endpoint_auth}/getLoggedInUser?userType=${userType}`, {
       headers: { token: token }
     })
       .then((response) => {
