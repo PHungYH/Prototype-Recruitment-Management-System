@@ -67,6 +67,7 @@ public class AuthController {
 	}
 
 	// Endpoint: /api/validateToken
+	// Validate token validity
 	@GetMapping("/validateToken")
 	public ResponseEntity<?> validateToken(@RequestHeader String token) {
 		if (jwtUtils.validateJwtToken(token)) {
