@@ -37,9 +37,10 @@ INSERT INTO employee_profiles (lastname, firstname, idcard, date_of_birth, gende
 ('Zhang', 'Qing Fu', 'D4567890', '1996-04-04', 'F');
 
 -- Insert sample employees
+-- Username must be 8 digits, require generator
 -- Raw: P@ssw0rd, Hashed password: $2a$10$9m7pR.K04NZSpYzibpl64uGCt6.sdcq/WkCEMh3LKR2/L3Yijvrya
 INSERT INTO employees (username, email, role_id, password_hash, emp_det_id, emp_prof_id) VALUES
-('phung', 'phung@company.com', 1, '$2a$10$9m7pR.K04NZSpYzibpl64uGCt6.sdcq/WkCEMh3LKR2/L3Yijvrya', 1, 1),
-('jxue', 'jxue@company.com', 2, '$2a$10$9m7pR.K04NZSpYzibpl64uGCt6.sdcq/WkCEMh3LKR2/L3Yijvrya', 2, 2),
-('jkeung', 'jkeung@company.com', 3, '$2a$10$9m7pR.K04NZSpYzibpl64uGCt6.sdcq/WkCEMh3LKR2/L3Yijvrya', 3, 3),
-('zqfu', 'zqfu@company.com', 3, '$2a$10$9m7pR.K04NZSpYzibpl64uGCt6.sdcq/WkCEMh3LKR2/L3Yijvrya', 4, 4);
+('81234567', 'phung@company.com', 1, '$2a$10$9m7pR.K04NZSpYzibpl64uGCt6.sdcq/WkCEMh3LKR2/L3Yijvrya', 1, 1),
+('82345678', 'jxue@company.com', 2, '$2a$10$9m7pR.K04NZSpYzibpl64uGCt6.sdcq/WkCEMh3LKR2/L3Yijvrya', 2, 2),
+('83456789', 'jkeung@company.com', 3, '$2a$10$9m7pR.K04NZSpYzibpl64uGCt6.sdcq/WkCEMh3LKR2/L3Yijvrya', 3, 3),
+('84567890', 'zqfu@company.com', 3, '$2a$10$9m7pR.K04NZSpYzibpl64uGCt6.sdcq/WkCEMh3LKR2/L3Yijvrya', 4, 4);
