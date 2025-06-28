@@ -13,7 +13,6 @@ import com.peterhung.hk.demo.hrms.hrms.dto.*;
 import com.peterhung.hk.demo.hrms.hrms.securityUtils.JwtUtils;
 import com.peterhung.hk.demo.hrms.hrms.service.AuthService;
 import com.peterhung.hk.demo.hrms.hrms.service.UserDetailsServiceImpl;
-import com.peterhung.hk.demo.hrms.hrms.service.Enum.UserType;
 
 // Data based on testdata.sql
 @SpringBootTest
@@ -34,21 +33,21 @@ public class AuthControllerTests {
 
 	@Test
 	public void testValidLogin() {
-		AuthRequest request = new AuthRequest(UserType.EMPLOYEE, "phung", "P@ssw0rd");
+		AuthRequest request = new AuthRequest("phung", "P@ssw0rd");
 		assert(controller.login(request).getStatusCode()).equals(HttpStatus.OK);
 	}
 
 	@Test
 	public void testInvalidLogin() {
-		AuthRequest request1 = new AuthRequest(UserType.EMPLOYEE,"phung", "badpass");
-		AuthRequest request2 = new AuthRequest(UserType.EMPLOYEE,"baduser", "P@ssw0rd");
+		AuthRequest request1 = new AuthRequest("phung", "badpass");
+		AuthRequest request2 = new AuthRequest("baduser", "P@ssw0rd");
 		assert(controller.login(request1).getStatusCode()).equals(HttpStatus.UNAUTHORIZED);
 		assert(controller.login(request2).getStatusCode()).equals(HttpStatus.UNAUTHORIZED);
 	}
 
 	@Test
 	public void testLoggedInUserByUsername() {
-		AuthRequest request = new AuthRequest(UserType.EMPLOYEE, "phung", "P@ssw0rd");
+		AuthRequest request = new AuthRequest( "phung", "P@ssw0rd");
 		ResponseEntity<?> response = controller.login(request);
 		assert(response.getStatusCode()).equals(HttpStatus.OK);
 		
@@ -56,7 +55,7 @@ public class AuthControllerTests {
 		assertNotNull(authResponse);
 
 		String token = authResponse.getToken();
-		ResponseEntity<?> responseName = controller.getLoggedInUser(token, UserType.EMPLOYEE);
+		ResponseEntity<?> responseName = controller.getLoggedInUser(token);
 		assert(responseName.getStatusCode()).equals(HttpStatus.OK);
 		CurrentUserResponse userResponse = (CurrentUserResponse) responseName.getBody();
 		assertNotNull(userResponse);
@@ -67,14 +66,14 @@ public class AuthControllerTests {
 
 	@Test
 	public void testLoggedInUserByUsernameCaseSensitive() {
-		AuthRequest request = new AuthRequest(UserType.EMPLOYEE, "PHUNG", "P@ssw0rd");
+		AuthRequest request = new AuthRequest("PHUNG", "P@ssw0rd");
 		ResponseEntity<?> response = controller.login(request);
 		assert(response.getStatusCode()).equals(HttpStatus.UNAUTHORIZED);
 	}
 
 	@Test
 	public void testLoggedInUserByEmail() {
-		AuthRequest request = new AuthRequest(UserType.EMPLOYEE, "jxue@company.com", "P@ssw0rd");
+		AuthRequest request = new AuthRequest("jxue@company.com", "P@ssw0rd");
 		ResponseEntity<?> response = controller.login(request);
 		assert(response.getStatusCode()).equals(HttpStatus.OK);
 		
@@ -82,7 +81,7 @@ public class AuthControllerTests {
 		assertNotNull(authResponse);
 
 		String token = authResponse.getToken();
-		ResponseEntity<?> responseName = controller.getLoggedInUser(token, UserType.EMPLOYEE);
+		ResponseEntity<?> responseName = controller.getLoggedInUser(token);
 		assert(responseName.getStatusCode()).equals(HttpStatus.OK);
 		CurrentUserResponse userResponse = (CurrentUserResponse) responseName.getBody();
 		assertNotNull(userResponse);
@@ -93,7 +92,7 @@ public class AuthControllerTests {
 
 	@Test
 	public void testLoggedInUserByEmailCaseInsensitive() {
-		AuthRequest request = new AuthRequest(UserType.EMPLOYEE, "JXUE@company.com", "P@ssw0rd");
+		AuthRequest request = new AuthRequest( "JXUE@company.com", "P@ssw0rd");
 		ResponseEntity<?> response = controller.login(request);
 		assert(response.getStatusCode()).equals(HttpStatus.OK);
 		
@@ -101,7 +100,7 @@ public class AuthControllerTests {
 		assertNotNull(authResponse);
 
 		String token = authResponse.getToken();
-		ResponseEntity<?> responseName = controller.getLoggedInUser(token, UserType.EMPLOYEE);
+		ResponseEntity<?> responseName = controller.getLoggedInUser(token);
 		assert(responseName.getStatusCode()).equals(HttpStatus.OK);
 		CurrentUserResponse userResponse = (CurrentUserResponse) responseName.getBody();
 		assertNotNull(userResponse);

@@ -12,7 +12,6 @@ import com.peterhung.hk.demo.hrms.hrms.model.Employee;
 import com.peterhung.hk.demo.hrms.hrms.securityUtils.JwtUtils;
 import com.peterhung.hk.demo.hrms.hrms.service.AuthService;
 import com.peterhung.hk.demo.hrms.hrms.service.UserDetailsServiceImpl;
-import com.peterhung.hk.demo.hrms.hrms.service.Enum.UserType;
 
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -51,13 +50,13 @@ public class AuthController {
 	// Process login requests.
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody AuthRequest authRequest) {
-		if (authService.authenticate(authRequest.getUserType(), authRequest.getUsernameOrEmail(), authRequest.getPassword())) {
-			Employee employee = null;
-			if (authRequest.getUserType().equals(UserType.EMPLOYEE))
-				employee = authService.getLastAuthEmployee();
-			// TODO: applicant impl
-			
-			String token = jwtUtils.generateToken(employee != null? employee.getUsername() : "");
+		if (authService.authenticate(authRequest.getUsernameOrEmail(), authRequest.getPassword())) {
+			Employee employee = authService.getLastAuthEmployee();
+			if (employee == null) {
+				logger.info("Unexpected error when getting emlpoyee object");
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			}
+			String token = jwtUtils.generateToken(employee.getUsername());
 			logger.info("Success login attempt, user: " + (employee != null? employee.getUsername(): ""));
 			return ResponseEntity.ok(new AuthResponse(token));
 		} else {
@@ -80,19 +79,15 @@ public class AuthController {
 	// Endpoint: /api/getLoggedInUser
 	// Get the currently logged-in user.
 	@GetMapping("/getLoggedInUser")
-	public ResponseEntity<?> getLoggedInUser(@RequestHeader String token, @RequestParam UserType userType) {
-		userDetailsServiceImpl.setUserType(userType);
+	public ResponseEntity<?> getLoggedInUser(@RequestHeader String token) {
 		
-		UserDetails userDetails;
-		if (userType.equals(UserType.EMPLOYEE))
-			userDetails = userDetailsServiceImpl.loadUserByUsername(jwtUtils.getUsernameFromToken(token));
-		else
-			userDetails = userDetailsServiceImpl.loadUserByUsername(jwtUtils.getUsernameFromToken(token));
+		UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(jwtUtils.getUsernameFromToken(token));
+		
 		Employee employee = userDetailsServiceImpl.getEmployee();
 		if (employee == null) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
-		return ResponseEntity.ok(new CurrentUserResponse(userType, userDetails.getUsername(), employee.getProfile().getLastname(), employee.getProfile().getFirstname()));
+		return ResponseEntity.ok(new CurrentUserResponse(userDetails.getUsername(), employee.getProfile().getLastname(), employee.getProfile().getFirstname()));
 	}
 	
 }

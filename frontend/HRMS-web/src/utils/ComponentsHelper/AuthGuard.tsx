@@ -8,10 +8,9 @@ const useAuthGuardPreLogin = () => {
 
   useEffect(() => {
     console.log("Check session");
-    const userType = localStorage.getItem(appGlobal.storage_key_userType);
     AuthHelper.isLoggedIn().then((result) => {
       if (result)
-        navigate(userType == 'EMPLOYEE' ? '/employeePanel' : 'applicantPanel');
+        navigate('/employeePanel');
       else
         AuthHelper.clearSession();  
     })

@@ -3,7 +3,6 @@ class AppGlobal {
   public endpoint_auth: string = '/auth';
   
   public storage_key_token = 'token';
-  public storage_key_userType = 'userType';
 }
 
 const appGlobal = new AppGlobal();
