@@ -53,7 +53,6 @@ CREATE TABLE employee_profiles (
     emergency_contact_name VARCHAR(100),
     emergency_contact_relationship VARCHAR(50),
     emergency_contact_phone VARCHAR(20),
-    marital_status VARCHAR(20),
     nationality VARCHAR(50)
 );
 

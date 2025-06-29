@@ -2,10 +2,10 @@ package com.peterhung.hk.demo.rms.rms.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.peterhung.hk.demo.rms.rms.model.Employee;
+import com.peterhung.hk.demo.rms.rms.model.Applicant;
 
-public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
-	Employee findByUsername(String username);
-	Employee findByEmail(String email);
-	Employee findByUsernameOrEmail(String username, String email);
+public interface EmployeeRepository extends JpaRepository<Applicant, Integer> {
+	Applicant findByUsername(String username);
+	Applicant findByEmail(String email);
+	Applicant findByUsernameOrEmail(String username, String email);
 }

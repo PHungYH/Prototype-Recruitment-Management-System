@@ -28,9 +28,10 @@ CREATE TABLE positions (
 -- APPLICANT PROFILES table
 CREATE TABLE applicant_profiles (
     appl_prof_id INT PRIMARY KEY AUTO_INCREMENT,
-    surname VARCHAR(50) NOT NULL,
+    lastname VARCHAR(50) NOT NULL,
     firstname VARCHAR(50) NOT NULL,
     alias VARCHAR(50),
+    idcard VARCHAR(20) NOT NULL,
     date_of_birth DATE NOT NULL,
     gender VARCHAR(1) NOT NULL CHECK (gender IN ('M', 'F')),
     phone_number VARCHAR(20),
@@ -48,6 +49,13 @@ CREATE TABLE applicants (
     CONSTRAINT fk_applicant_profiles FOREIGN KEY (appl_prof_id) REFERENCES applicant_profiles(appl_prof_id)
 );
 
+-- admin table
+CREATE TABLE admins (
+    admin_id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL
+);
+
 -- JOB OPENINGS table
 CREATE TABLE job_openings (
     job_id INT PRIMARY KEY AUTO_INCREMENT,
@@ -55,8 +63,8 @@ CREATE TABLE job_openings (
     emp_type_id INT NOT NULL, 
     dept_id INT NOT NULL,
     job_description TEXT NOT NULL,
-    requirements TEXT NOT NULL,
-    posted_date DATE NOT NULL,
+    job_requirements TEXT NOT NULL,
+    job_posted_date DATE NOT NULL,
     is_active BOOLEAN DEFAULT TRUE,
     CONSTRAINT fk_employment_types FOREIGN KEY (emp_type_id) REFERENCES employment_types(emp_type_id),
     CONSTRAINT fk_departments FOREIGN KEY (dept_id) REFERENCES departments(dept_id)
@@ -80,7 +88,7 @@ CREATE TABLE application_status (
 
 -- JOB APPLICATIONS table
 CREATE TABLE job_applications (
-    job_applications_id INT PRIMARY KEY AUTO_INCREMENT,
+    job_application_id INT PRIMARY KEY AUTO_INCREMENT,
     job_id INT NOT NULL,
     appl_id INT NOT NULL,
     applied_time DATE NOT NULL,
@@ -90,9 +98,18 @@ CREATE TABLE job_applications (
     CONSTRAINT fk_status_id FOREIGN KEY (status_id) REFERENCES application_status(status_id)
 );
 
+-- FOLLOWUPS table
+CREATE TABLE followups (
+    followup_id INT PRIMARY KEY AUTO_INCREMENT,
+    admin_id INT NOT NULL, 
+    job_application_id INT NOT NULL,
+    CONSTRAINT fk_admins FOREIGN KEY (admin_id) REFERENCES admin(admin_id),
+    CONSTRAINT fk_job_applications FOREIGN KEY (job_application_id) REFERENCES job_applications(job_application_id) 
+);
+
 -- MIGRATION table
 CREATE TABLE migrations (
-    migrations_id INT PRIMARY KEY AUTO_INCREMENT,
+    migration_id INT PRIMARY KEY AUTO_INCREMENT,
     appl_id INT NOT NULL,
     CONSTRAINT fk_applicants FOREIGN KEY (appl_id) REFERENCES applicants(appl_id)
 );

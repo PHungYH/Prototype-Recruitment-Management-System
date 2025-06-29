@@ -40,9 +40,6 @@ public class EmployeeProfile {
     @Column(name = "emergency_contact_phone")
     private String emergencyContactPhone;
 
-    @Column(name = "marital_status")
-    private String maritalStatus;
-
     private String nationality;
 
 
@@ -140,14 +137,6 @@ public class EmployeeProfile {
 
     public void setEmergencyContactPhone(String emergencyContactPhone) {
         this.emergencyContactPhone = emergencyContactPhone;
-    }
-
-    public String getMaritalStatus() {
-        return maritalStatus;
-    }
-
-    public void setMaritalStatus(String maritalStatus) {
-        this.maritalStatus = maritalStatus;
     }
 
     public String getNationality() {
