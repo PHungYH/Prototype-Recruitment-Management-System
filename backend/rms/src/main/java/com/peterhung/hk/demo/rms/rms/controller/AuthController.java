@@ -8,10 +8,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import com.peterhung.hk.demo.rms.rms.dto.*;
-import com.peterhung.hk.demo.rms.rms.model.Applicant;
+import com.peterhung.hk.demo.rms.rms.model.Admin;
 import com.peterhung.hk.demo.rms.rms.securityUtils.JwtUtils;
-import com.peterhung.hk.demo.rms.rms.service.AuthService;
-import com.peterhung.hk.demo.rms.rms.service.UserDetailsServiceImpl;
+import com.peterhung.hk.demo.rms.rms.service.AdminAuthService;
+import com.peterhung.hk.demo.rms.rms.service.AdminUserDetailsServiceImpl;
 
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -19,22 +19,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequestMapping("/api/auth")
 public class AuthController {
 	private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
-	private final AuthService authService;
-	private final UserDetailsServiceImpl userDetailsServiceImpl;
+	private final AdminAuthService authService;
+	private final AdminUserDetailsServiceImpl userDetailsServiceImpl;
+	// TODO: applicant UDS
 	private final JwtUtils jwtUtils;
 	
-	public AuthController(AuthService authService, JwtUtils jwtUtils, UserDetailsServiceImpl employeeUserDetailsService) {
+	public AuthController(AdminAuthService authService, JwtUtils jwtUtils, AdminUserDetailsServiceImpl employeeUserDetailsService) {
 		this.authService = authService;
 		this.userDetailsServiceImpl = employeeUserDetailsService;
 		this.jwtUtils = jwtUtils;
 	}
 
-	// Endpoint: /transferApplicant
-	// Transfer applicant data to employee. 
+	// Endpoint: /migrateApplicant
+	// Migrate applicant data to employee. 
 	// Move applicant account to employee.
-	// Only available to HR role
-	@PostMapping("/transferApplicant")
-	public ResponseEntity<?> transferApplicant(@RequestBody AuthRequest authRequest) {
+	@PostMapping("/migrateApplicant")
+	public ResponseEntity<?> migrateApplicant(@RequestBody ApplicantAuthRequest authRequest) {
 		return ResponseEntity.ok("");
 	}
 	
@@ -42,25 +42,26 @@ public class AuthController {
 	// Register job applicants
 	// Username must not contain special character
 	@PostMapping("/registerApplicant")
-	public ResponseEntity<?> registerApplicant(@RequestBody AuthRequest authRequest) {
+	public ResponseEntity<?> registerApplicant(@RequestBody ApplicantAuthRequest authRequest) {
 		return ResponseEntity.ok("");
 	}
 
 	// Endpoint: /api/login
 	// Process login requests.
 	@PostMapping("/login")
-	public ResponseEntity<?> login(@RequestBody AuthRequest authRequest) {
-		if (authService.authenticate(authRequest.getUsernameOrEmail(), authRequest.getPassword())) {
-			Applicant employee = authService.getLastAuthEmployee();
+	public ResponseEntity<?> login(@RequestBody AdminAuthRequest authRequest) {
+		// TODO: by user type
+		if (authService.authenticate(authRequest.getUsername(), authRequest.getPassword())) {
+			Admin employee = authService.getLastAuthAdmin();
 			if (employee == null) {
-				logger.info("Unexpected error when getting emlpoyee object");
+				logger.info("Unexpected error when getting admin object");
 				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 			}
 			String token = jwtUtils.generateToken(employee.getUsername());
-			logger.info("Success login attempt, user: " + (employee != null? employee.getUsername(): ""));
+			logger.info("Success login attempt, admin: " + (employee != null? employee.getUsername(): ""));
 			return ResponseEntity.ok(new AuthResponse(token));
 		} else {
-			logger.info("Failed login attempt, user: " + authRequest.getUsernameOrEmail());
+			logger.info("Failed login attempt, admin: " + authRequest.getUsername());
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 	}
@@ -80,14 +81,14 @@ public class AuthController {
 	// Get the currently logged-in user.
 	@GetMapping("/getLoggedInUser")
 	public ResponseEntity<?> getLoggedInUser(@RequestHeader String token) {
-		
+		// TODO: by user type
 		UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(jwtUtils.getUsernameFromToken(token));
 		
-		Applicant employee = userDetailsServiceImpl.getEmployee();
-		if (employee == null) {
+		Admin admin = userDetailsServiceImpl.getAdmin();
+		if (admin == null) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
-		return ResponseEntity.ok(new CurrentUserResponse(userDetails.getUsername(), employee.getProfile().getLastname(), employee.getProfile().getFirstname()));
+		return ResponseEntity.ok(new CurrentAdminUserResponse(userDetails.getUsername()));
 	}
 	
 }

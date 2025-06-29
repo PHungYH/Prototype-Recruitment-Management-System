@@ -3,14 +3,14 @@ package com.peterhung.hk.demo.rms.rms.dto;
 // DTO = data transfer object
 // Request json object for authentication
 // Example: {"usernameOrEmail": "user", "password": "pass"}
-public class AuthRequest {
+public class ApplicantAuthRequest {
 	private String usernameOrEmail;
 	private String password;
 
-	public AuthRequest() {
+	public ApplicantAuthRequest() {
 	}
 
-	public AuthRequest(String usernameOrEmail, String password) {
+	public ApplicantAuthRequest(String usernameOrEmail, String password) {
 		this.usernameOrEmail = usernameOrEmail;
 		this.password = password;
 	}
