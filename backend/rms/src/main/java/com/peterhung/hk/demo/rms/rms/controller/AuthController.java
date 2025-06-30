@@ -2,23 +2,19 @@ package com.peterhung.hk.demo.rms.rms.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import com.peterhung.hk.demo.rms.rms.dto.*;
-import com.peterhung.hk.demo.rms.rms.dto.request.ApplicantAuthRequest;
-import com.peterhung.hk.demo.rms.rms.dto.request.UserAuthRequest;
-import com.peterhung.hk.demo.rms.rms.dto.response.AuthResponse;
-import com.peterhung.hk.demo.rms.rms.dto.response.CurrentAdminUserResponse;
-import com.peterhung.hk.demo.rms.rms.dto.response.SimpleBooleanResponse;
+import com.peterhung.hk.demo.rms.rms.dto.request.*;
+import com.peterhung.hk.demo.rms.rms.dto.response.*;
 import com.peterhung.hk.demo.rms.rms.model.Admin;
 import com.peterhung.hk.demo.rms.rms.model.Applicant;
 import com.peterhung.hk.demo.rms.rms.securityUtils.JwtUtils;
-import com.peterhung.hk.demo.rms.rms.service.AuthService;
+import com.peterhung.hk.demo.rms.rms.service.*;
 import com.peterhung.hk.demo.rms.rms.service.Enum.UserType;
-import com.peterhung.hk.demo.rms.rms.service.AdminUserDetailsServiceImpl;
 
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -27,24 +23,26 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class AuthController {
 	private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 	private final AuthService authService;
-	private final AdminUserDetailsServiceImpl userDetailsServiceImpl;
-	// TODO: applicant UDS
+	private final AdminUserDetailsServiceImpl adminUserDetailsServiceImpl;
+	private final ApplicantUserDetailsServiceImpl applicantUserDetailsServiceImpl;
 	private final JwtUtils jwtUtils;
-	
-	public AuthController(AuthService authService, JwtUtils jwtUtils, AdminUserDetailsServiceImpl employeeUserDetailsService) {
+
+	public AuthController(AuthService authService, JwtUtils jwtUtils,
+			AdminUserDetailsServiceImpl adminUserDetailsService, ApplicantUserDetailsServiceImpl applicantUserDetailsService) {
 		this.authService = authService;
-		this.userDetailsServiceImpl = employeeUserDetailsService;
+		this.adminUserDetailsServiceImpl = adminUserDetailsService;
+		this.applicantUserDetailsServiceImpl = applicantUserDetailsService;
 		this.jwtUtils = jwtUtils;
 	}
 
 	// Endpoint: /migrateApplicant
-	// Migrate applicant data to employee. 
+	// Migrate applicant data to employee.
 	// Move applicant account to employee.
 	@PostMapping("/migrateApplicant")
 	public ResponseEntity<?> migrateApplicant(@RequestBody ApplicantAuthRequest authRequest) {
 		return ResponseEntity.ok("");
 	}
-	
+
 	// Endpoint: /registerApplicant
 	// Register job applicants
 	// Username must not contain special character
@@ -57,16 +55,8 @@ public class AuthController {
 	// Process login requests.
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody UserAuthRequest authRequest) {
-		if (authRequest.getUserType() == UserType.APPLICANT && authService.authenticateApplicant(authRequest.getUsernameOrEmail(), authRequest.getPassword())) {
-			Applicant applicant = authService.getLastAuthApplicant();
-			if (applicant == null) {
-				logger.info("Unexpected error when getting applicant object");
-				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-			}
-			String token = jwtUtils.generateToken(applicant.getUsername());
-			logger.info("Success login attempt, applicant: " + applicant.getUsername());
-			return ResponseEntity.ok(new AuthResponse(token));
-		} else if (authRequest.getUserType() == UserType.ADMIN && authService.authenticateAdmin(authRequest.getUsernameOrEmail(), authRequest.getPassword())) {
+		if (authRequest.getUserType() == UserType.ADMIN
+				&& authService.authenticateAdmin(authRequest.getUsernameOrEmail(), authRequest.getPassword())) {
 			Admin admin = authService.getLastAuthAdmin();
 			if (admin == null) {
 				logger.info("Unexpected error when getting admin object");
@@ -74,6 +64,16 @@ public class AuthController {
 			}
 			String token = jwtUtils.generateToken(admin.getUsername());
 			logger.info("Success login attempt, admin: " + admin.getUsername());
+			return ResponseEntity.ok(new AuthResponse(token));
+		} else if (authRequest.getUserType() == UserType.APPLICANT
+				&& authService.authenticateApplicant(authRequest.getUsernameOrEmail(), authRequest.getPassword())) {
+			Applicant applicant = authService.getLastAuthApplicant();
+			if (applicant == null) {
+				logger.info("Unexpected error when getting applicant object");
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			}
+			String token = jwtUtils.generateToken(applicant.getUsername());
+			logger.info("Success login attempt, applicant: " + applicant.getUsername());
 			return ResponseEntity.ok(new AuthResponse(token));
 		} else {
 			logger.info("Failed login attempt, admin: " + authRequest.getUsernameOrEmail());
@@ -92,18 +92,30 @@ public class AuthController {
 		}
 	}
 
-	// Endpoint: /api/getLoggedInUser
-	// Get the currently logged-in user.
-	@GetMapping("/getLoggedInUser")
-	public ResponseEntity<?> getLoggedInUser(@RequestHeader String token) {
-		// TODO: by user type
-		UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(jwtUtils.getUsernameFromToken(token));
-		
-		Admin admin = userDetailsServiceImpl.getAdmin();
-		if (admin == null) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+	// Endpoint: /api/getLoggedInUsername
+	// Get the currently logged-in username.
+	@GetMapping("/getLoggedInUsername")
+	public ResponseEntity<?> getLoggedInUsername(@RequestHeader String token, @RequestParam UserType userType) {
+		UserDetails userDetails;
+		if (userType == UserType.ADMIN) {
+			userDetails = adminUserDetailsServiceImpl
+					.loadUserByUsername(jwtUtils.getUsernameFromToken(token));
+			Admin admin = adminUserDetailsServiceImpl.getAdmin();
+			if (admin == null) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+			}
+		} else if (userType == UserType.APPLICANT) {
+			userDetails = applicantUserDetailsServiceImpl
+					.loadUserByUsername(jwtUtils.getUsernameFromToken(token));
+			Applicant applicant = applicantUserDetailsServiceImpl.getApplicant();
+			if (applicant == null) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+			}
+		} else {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid user type");
 		}
-		return ResponseEntity.ok(new CurrentAdminUserResponse(userDetails.getUsername()));
+		
+		return ResponseEntity.ok(new CurrentUsernameResponse(userDetails.getUsername()));
 	}
-	
+
 }

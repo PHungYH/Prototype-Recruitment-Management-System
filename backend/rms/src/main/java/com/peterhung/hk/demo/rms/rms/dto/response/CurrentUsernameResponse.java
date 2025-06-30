@@ -1,10 +1,10 @@
 package com.peterhung.hk.demo.rms.rms.dto.response;
 
 // Response json object for user data
-public class CurrentAdminUserResponse {
+public class CurrentUsernameResponse {
 	private String username;
 
-	public CurrentAdminUserResponse(String username) {
+	public CurrentUsernameResponse(String username) {
 		this.username = username;
 	}
 

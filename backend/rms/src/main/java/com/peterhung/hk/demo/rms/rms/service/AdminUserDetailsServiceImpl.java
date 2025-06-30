@@ -11,13 +11,12 @@ import java.util.Collections;
 @Service
 public class AdminUserDetailsServiceImpl implements UserDetailsService {
     @Autowired
-    private AdminRepository AdminRepository;
+    private AdminRepository adminRepository;
     private Admin admin;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Admin AdminUser = null;
-        AdminUser = AdminRepository.findByUsername(username);
+        Admin AdminUser = adminRepository.findByUsername(username);
         
         if (AdminUser == null) {
             throw new UsernameNotFoundException("User Not Found with username: " + username);

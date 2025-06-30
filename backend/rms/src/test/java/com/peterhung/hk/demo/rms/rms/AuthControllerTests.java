@@ -9,11 +9,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.*;
 
 import com.peterhung.hk.demo.rms.rms.controller.AuthController;
-import com.peterhung.hk.demo.rms.rms.dto.*;
 import com.peterhung.hk.demo.rms.rms.dto.request.UserAuthRequest;
 import com.peterhung.hk.demo.rms.rms.securityUtils.JwtUtils;
-import com.peterhung.hk.demo.rms.rms.service.AuthService;
-import com.peterhung.hk.demo.rms.rms.service.AdminUserDetailsServiceImpl;
+import com.peterhung.hk.demo.rms.rms.service.*;
 import com.peterhung.hk.demo.rms.rms.service.Enum.UserType;
 
 // Data based on testdata.sql
@@ -27,10 +25,12 @@ public class AuthControllerTests {
 	private JwtUtils jwtUtils;
 	@Autowired
 	private AdminUserDetailsServiceImpl adminUserDetailsService;
+	@Autowired
+	private ApplicantUserDetailsServiceImpl applicantUserDetailsService;
 
 	@BeforeEach
 	public void setUp() throws Exception {
-		controller = new AuthController(authService, jwtUtils, adminUserDetailsService);
+		controller = new AuthController(authService, jwtUtils, adminUserDetailsService, applicantUserDetailsService);
 	}
 
 	@Test
