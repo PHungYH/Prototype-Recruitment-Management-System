@@ -9,7 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.*;
 
 import com.peterhung.hk.demo.rms.rms.controller.AuthController;
-import com.peterhung.hk.demo.rms.rms.dto.request.UserAuthRequest;
+import com.peterhung.hk.demo.rms.rms.dto.request.*;
+import com.peterhung.hk.demo.rms.rms.dto.response.*;
 import com.peterhung.hk.demo.rms.rms.securityUtils.JwtUtils;
 import com.peterhung.hk.demo.rms.rms.service.*;
 import com.peterhung.hk.demo.rms.rms.service.Enum.UserType;
@@ -39,75 +40,85 @@ public class AuthControllerTests {
 		assert(controller.login(request).getStatusCode()).equals(HttpStatus.OK);
 	}
 
-	// @Test
-	// public void testInvalidLogin() {
-	// 	ApplicantAuthRequest request1 = new ApplicantAuthRequest("phung", "badpass");
-	// 	ApplicantAuthRequest request2 = new ApplicantAuthRequest("baduser", "P@ssw0rd");
-	// 	assert(controller.login(request1).getStatusCode()).equals(HttpStatus.UNAUTHORIZED);
-	// 	assert(controller.login(request2).getStatusCode()).equals(HttpStatus.UNAUTHORIZED);
-	// }
+	@Test
+	public void testInvalidLoginAdmin() {
+		UserAuthRequest request1 = new UserAuthRequest(UserType.ADMIN, "phung", "badpass");
+		UserAuthRequest request2 = new UserAuthRequest(UserType.ADMIN, "baduser", "P@ssw0rd");
+		UserAuthRequest request3 = new UserAuthRequest(UserType.ADMIN, "pHung", "P@ssw0rd");
+		assert(controller.login(request1).getStatusCode()).equals(HttpStatus.UNAUTHORIZED);
+		assert(controller.login(request2).getStatusCode()).equals(HttpStatus.UNAUTHORIZED);
+		assert(controller.login(request3).getStatusCode()).equals(HttpStatus.UNAUTHORIZED);
+	}
 
-	// @Test
-	// public void testLoggedInUserByUsername() {
-	// 	ApplicantAuthRequest request = new ApplicantAuthRequest( "phung", "P@ssw0rd");
-	// 	ResponseEntity<?> response = controller.login(request);
-	// 	assert(response.getStatusCode()).equals(HttpStatus.OK);
+	@Test
+	public void testValidLoginApplicant() {
+		UserAuthRequest request1 = new UserAuthRequest(UserType.APPLICANT, "johnsmith90", "P@ssw0rd");
+		UserAuthRequest request2 = new UserAuthRequest(UserType.APPLICANT, "liam.ngUyen@example.com", "P@ssw0rd");
+		assert(controller.login(request1).getStatusCode()).equals(HttpStatus.OK);		
+		assert(controller.login(request2).getStatusCode()).equals(HttpStatus.OK);
+	}
+
+	@Test
+	public void testInvalidLoginApplicant() {
+		UserAuthRequest request1 = new UserAuthRequest(UserType.APPLICANT, "emilytaylor93", "badpass");
+		UserAuthRequest request2 = new UserAuthRequest(UserType.APPLICANT, "baduser", "P@ssw0rd");
+		UserAuthRequest request3 = new UserAuthRequest(UserType.APPLICANT, "emilytAylor93", "P@ssw0rd");
+		assert(controller.login(request1).getStatusCode()).equals(HttpStatus.UNAUTHORIZED);
+		assert(controller.login(request2).getStatusCode()).equals(HttpStatus.UNAUTHORIZED);
+		assert(controller.login(request3).getStatusCode()).equals(HttpStatus.UNAUTHORIZED);
+	}
+
+	@Test
+	public void testAdminLoggedInUserByUsername() {
+		UserAuthRequest request1 = new UserAuthRequest(UserType.ADMIN, "admin1", "P@ssw0rd");
+
+		ResponseEntity<?> response = controller.login(request1);
+		assert(response.getStatusCode()).equals(HttpStatus.OK);
 		
-	// 	AuthResponse authResponse = (AuthResponse) response.getBody();
-	// 	assertNotNull(authResponse);
+		AuthResponse authResponse = (AuthResponse) response.getBody();
+		assertNotNull(authResponse);
 
-	// 	String token = authResponse.getToken();
-	// 	ResponseEntity<?> responseName = controller.getLoggedInUser(token);
-	// 	assert(responseName.getStatusCode()).equals(HttpStatus.OK);
-	// 	CurrentUserResponse userResponse = (CurrentUserResponse) responseName.getBody();
-	// 	assertNotNull(userResponse);
-	// 	assert(userResponse.getUserName()).equals("phung");
-	// 	assert(userResponse.getProfileLastName()).equals("Hung");
-	// 	assert(userResponse.getProfileFirstName()).equals("Peter");
-	// }
+		String token = authResponse.getToken();
+		ResponseEntity<?> responseName = controller.getLoggedInUsername(token, UserType.ADMIN);
+		assert(responseName.getStatusCode()).equals(HttpStatus.OK);
+		CurrentUsernameResponse userResponse = (CurrentUsernameResponse) responseName.getBody();
+		assertNotNull(userResponse);
+		assert(userResponse.getUserName()).equals("admin1");
+	}
 
-	// @Test
-	// public void testLoggedInUserByUsernameCaseSensitive() {
-	// 	ApplicantAuthRequest request = new ApplicantAuthRequest("PHUNG", "P@ssw0rd");
-	// 	ResponseEntity<?> response = controller.login(request);
-	// 	assert(response.getStatusCode()).equals(HttpStatus.UNAUTHORIZED);
-	// }
+	@Test
+	public void testApplicantLoggedInUserByUsername() {
+		UserAuthRequest request1 = new UserAuthRequest(UserType.APPLICANT, "emilytaylor93", "P@ssw0rd");
 
-	// @Test
-	// public void testLoggedInUserByEmail() {
-	// 	ApplicantAuthRequest request = new ApplicantAuthRequest("jxue@company.com", "P@ssw0rd");
-	// 	ResponseEntity<?> response = controller.login(request);
-	// 	assert(response.getStatusCode()).equals(HttpStatus.OK);
+		ResponseEntity<?> response = controller.login(request1);
+		assert(response.getStatusCode()).equals(HttpStatus.OK);
 		
-	// 	AuthResponse authResponse = (AuthResponse) response.getBody();
-	// 	assertNotNull(authResponse);
+		AuthResponse authResponse = (AuthResponse) response.getBody();
+		assertNotNull(authResponse);
 
-	// 	String token = authResponse.getToken();
-	// 	ResponseEntity<?> responseName = controller.getLoggedInUser(token);
-	// 	assert(responseName.getStatusCode()).equals(HttpStatus.OK);
-	// 	CurrentUserResponse userResponse = (CurrentUserResponse) responseName.getBody();
-	// 	assertNotNull(userResponse);
-	// 	assert(userResponse.getUserName()).equals("jxue");
-	// 	assert(userResponse.getProfileLastName()).equals("Xue");
-	// 	assert(userResponse.getProfileFirstName()).equals("Chun");
-	// }
+		String token = authResponse.getToken();
+		ResponseEntity<?> responseName = controller.getLoggedInUsername(token, UserType.APPLICANT);
+		assert(responseName.getStatusCode()).equals(HttpStatus.OK);
+		CurrentUsernameResponse userResponse = (CurrentUsernameResponse) responseName.getBody();
+		assertNotNull(userResponse);
+		assert(userResponse.getUserName()).equals("emilytaylor93");
+	}
 
-	// @Test
-	// public void testLoggedInUserByEmailCaseInsensitive() {
-	// 	ApplicantAuthRequest request = new ApplicantAuthRequest( "JXUE@company.com", "P@ssw0rd");
-	// 	ResponseEntity<?> response = controller.login(request);
-	// 	assert(response.getStatusCode()).equals(HttpStatus.OK);
+	@Test
+	public void testApplicantLoggedInUserByEmail() {
+		UserAuthRequest request1 = new UserAuthRequest(UserType.APPLICANT, "liam.ngUyen@example.com", "P@ssw0rd");
+
+		ResponseEntity<?> response = controller.login(request1);
+		assert(response.getStatusCode()).equals(HttpStatus.OK);
 		
-	// 	AuthResponse authResponse = (AuthResponse) response.getBody();
-	// 	assertNotNull(authResponse);
+		AuthResponse authResponse = (AuthResponse) response.getBody();
+		assertNotNull(authResponse);
 
-	// 	String token = authResponse.getToken();
-	// 	ResponseEntity<?> responseName = controller.getLoggedInUser(token);
-	// 	assert(responseName.getStatusCode()).equals(HttpStatus.OK);
-	// 	CurrentUserResponse userResponse = (CurrentUserResponse) responseName.getBody();
-	// 	assertNotNull(userResponse);
-	// 	assert(userResponse.getUserName()).equals("jxue");
-	// 	assert(userResponse.getProfileLastName()).equals("Xue");
-	// 	assert(userResponse.getProfileFirstName()).equals("Chun");
-	// }
+		String token = authResponse.getToken();
+		ResponseEntity<?> responseName = controller.getLoggedInUsername(token, UserType.APPLICANT);
+		assert(responseName.getStatusCode()).equals(HttpStatus.OK);
+		CurrentUsernameResponse userResponse = (CurrentUsernameResponse) responseName.getBody();
+		assertNotNull(userResponse);
+		assert(userResponse.getUserName()).equals("liamnguyen91");
+	}
 }
