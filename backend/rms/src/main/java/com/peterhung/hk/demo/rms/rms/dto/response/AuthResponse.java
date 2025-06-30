@@ -1,4 +1,4 @@
-package com.peterhung.hk.demo.rms.rms.dto;
+package com.peterhung.hk.demo.rms.rms.dto.response;
 
 // Response json object for authentication
 public class AuthResponse {

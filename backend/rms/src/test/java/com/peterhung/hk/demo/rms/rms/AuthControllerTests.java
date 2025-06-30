@@ -10,32 +10,34 @@ import org.springframework.http.*;
 
 import com.peterhung.hk.demo.rms.rms.controller.AuthController;
 import com.peterhung.hk.demo.rms.rms.dto.*;
+import com.peterhung.hk.demo.rms.rms.dto.request.UserAuthRequest;
 import com.peterhung.hk.demo.rms.rms.securityUtils.JwtUtils;
-import com.peterhung.hk.demo.rms.rms.service.AdminAuthService;
+import com.peterhung.hk.demo.rms.rms.service.AuthService;
 import com.peterhung.hk.demo.rms.rms.service.AdminUserDetailsServiceImpl;
+import com.peterhung.hk.demo.rms.rms.service.Enum.UserType;
 
 // Data based on testdata.sql
 @SpringBootTest
 public class AuthControllerTests {
 
-	// private AuthController controller;
-	// @Autowired
-	// private AdminAuthService authService;
-	// @Autowired
-	// private JwtUtils jwtUtils;
-	// @Autowired
-	// private AdminUserDetailsServiceImpl employeeUserDetailsService;
+	private AuthController controller;
+	@Autowired
+	private AuthService authService;
+	@Autowired
+	private JwtUtils jwtUtils;
+	@Autowired
+	private AdminUserDetailsServiceImpl adminUserDetailsService;
 
-	// @BeforeEach
-	// public void setUp() throws Exception {
-	// 	controller = new AuthController(authService, jwtUtils, employeeUserDetailsService);
-	// }
+	@BeforeEach
+	public void setUp() throws Exception {
+		controller = new AuthController(authService, jwtUtils, adminUserDetailsService);
+	}
 
-	// @Test
-	// public void testValidLogin() {
-	// 	ApplicantAuthRequest request = new ApplicantAuthRequest("phung", "P@ssw0rd");
-	// 	assert(controller.login(request).getStatusCode()).equals(HttpStatus.OK);
-	// }
+	@Test
+	public void testValidLoginAdmin() {
+		UserAuthRequest request = new UserAuthRequest(UserType.ADMIN, "admin1", "P@ssw0rd");
+		assert(controller.login(request).getStatusCode()).equals(HttpStatus.OK);
+	}
 
 	// @Test
 	// public void testInvalidLogin() {

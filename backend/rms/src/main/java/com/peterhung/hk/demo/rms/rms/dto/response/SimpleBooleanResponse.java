@@ -1,9 +1,9 @@
-package com.peterhung.hk.demo.rms.rms.dto;
+package com.peterhung.hk.demo.rms.rms.dto.response;
 
-public class SimpleBooleanReply {
+public class SimpleBooleanResponse {
     private boolean result;
 
-    public SimpleBooleanReply(boolean result) {
+    public SimpleBooleanResponse(boolean result) {
         this.result = result;
     }
 

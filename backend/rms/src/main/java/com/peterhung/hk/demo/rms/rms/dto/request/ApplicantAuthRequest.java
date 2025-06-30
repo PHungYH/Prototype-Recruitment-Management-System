@@ -1,4 +1,4 @@
-package com.peterhung.hk.demo.rms.rms.dto;
+package com.peterhung.hk.demo.rms.rms.dto.request;
 
 // DTO = data transfer object
 // Request json object for authentication
