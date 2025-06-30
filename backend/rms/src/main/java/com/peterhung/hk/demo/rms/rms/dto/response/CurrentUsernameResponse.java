@@ -8,5 +8,5 @@ public class CurrentUsernameResponse {
 		this.username = username;
 	}
 
-	public String getUserName() {return username;}
+	public String getUsername() {return username;}
 }
