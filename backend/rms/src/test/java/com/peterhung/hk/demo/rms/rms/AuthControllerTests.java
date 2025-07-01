@@ -28,10 +28,12 @@ public class AuthControllerTests {
 	private AdminUserDetailsServiceImpl adminUserDetailsService;
 	@Autowired
 	private ApplicantUserDetailsServiceImpl applicantUserDetailsService;
+	@Autowired
+	private ApplicantService applicantService;
 
 	@BeforeEach
 	public void setUp() throws Exception {
-		controller = new AuthController(authService, jwtUtils, adminUserDetailsService, applicantUserDetailsService);
+		controller = new AuthController(authService, jwtUtils, adminUserDetailsService, applicantUserDetailsService, applicantService);
 	}
 
 	@Test
@@ -83,7 +85,7 @@ public class AuthControllerTests {
 		assert(responseName.getStatusCode()).equals(HttpStatus.OK);
 		CurrentUsernameResponse userResponse = (CurrentUsernameResponse) responseName.getBody();
 		assertNotNull(userResponse);
-		assert(userResponse.getUserName()).equals("admin1");
+		assert(userResponse.getUsername()).equals("admin1");
 	}
 
 	@Test
@@ -101,7 +103,7 @@ public class AuthControllerTests {
 		assert(responseName.getStatusCode()).equals(HttpStatus.OK);
 		CurrentUsernameResponse userResponse = (CurrentUsernameResponse) responseName.getBody();
 		assertNotNull(userResponse);
-		assert(userResponse.getUserName()).equals("emilytaylor93");
+		assert(userResponse.getUsername()).equals("emilytaylor93");
 	}
 
 	@Test
@@ -119,6 +121,6 @@ public class AuthControllerTests {
 		assert(responseName.getStatusCode()).equals(HttpStatus.OK);
 		CurrentUsernameResponse userResponse = (CurrentUsernameResponse) responseName.getBody();
 		assertNotNull(userResponse);
-		assert(userResponse.getUserName()).equals("liamnguyen91");
+		assert(userResponse.getUsername()).equals("liamnguyen91");
 	}
 }

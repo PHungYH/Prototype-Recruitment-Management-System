@@ -8,6 +8,7 @@ import com.peterhung.hk.demo.rms.rms.model.Applicant;
 import com.peterhung.hk.demo.rms.rms.repository.ApplicantRepository;
 
 import java.util.Collections;
+// Note: classes extended from UDS are for auth use 
 @Service
 public class ApplicantUserDetailsServiceImpl implements UserDetailsService {
     @Autowired

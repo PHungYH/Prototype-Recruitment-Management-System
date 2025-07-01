@@ -8,6 +8,7 @@ import com.peterhung.hk.demo.rms.rms.model.Admin;
 import com.peterhung.hk.demo.rms.rms.repository.AdminRepository;
 
 import java.util.Collections;
+// Note: classes extended from UDS are for auth use 
 @Service
 public class AdminUserDetailsServiceImpl implements UserDetailsService {
     @Autowired

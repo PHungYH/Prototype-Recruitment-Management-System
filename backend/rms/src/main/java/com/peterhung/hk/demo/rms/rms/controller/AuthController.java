@@ -24,13 +24,17 @@ public class AuthController {
 	private final AuthService authService;
 	private final AdminUserDetailsServiceImpl adminUserDetailsServiceImpl;
 	private final ApplicantUserDetailsServiceImpl applicantUserDetailsServiceImpl;
+	private final ApplicantService applicantService;
 	private final JwtUtils jwtUtils;
 
 	public AuthController(AuthService authService, JwtUtils jwtUtils,
-			AdminUserDetailsServiceImpl adminUserDetailsService, ApplicantUserDetailsServiceImpl applicantUserDetailsService) {
+			AdminUserDetailsServiceImpl adminUserDetailsService, 
+			ApplicantUserDetailsServiceImpl applicantUserDetailsService,
+			ApplicantService applicantService) {
 		this.authService = authService;
 		this.adminUserDetailsServiceImpl = adminUserDetailsService;
 		this.applicantUserDetailsServiceImpl = applicantUserDetailsService;
+		this.applicantService = applicantService;
 		this.jwtUtils = jwtUtils;
 	}
 
@@ -45,9 +49,12 @@ public class AuthController {
 	// Endpoint: /registerApplicant
 	// Register job applicants
 	// Username must not contain special character
+	// Success registrations -> login
 	@PostMapping("/registerApplicant")
-	public ResponseEntity<?> registerApplicant(@RequestBody ApplicantAuthRequest authRequest) {
-		return ResponseEntity.ok("");
+	public ResponseEntity<?> registerApplicant(@RequestBody ApplicantRegistrationRequest registrationRequest) {
+		// TODO: implement
+		applicantService.createUser(null);
+		return login(new UserAuthRequest(UserType.APPLICANT, registrationRequest.getUsername(), registrationRequest.getPassword()));
 	}
 
 	// Endpoint: /api/login
