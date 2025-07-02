@@ -9,13 +9,12 @@ import org.springframework.web.bind.annotation.*;
 
 import com.peterhung.hk.demo.rms.rms.dto.request.*;
 import com.peterhung.hk.demo.rms.rms.dto.response.*;
+import com.peterhung.hk.demo.rms.rms.exceptions.*;
 import com.peterhung.hk.demo.rms.rms.model.Admin;
 import com.peterhung.hk.demo.rms.rms.model.Applicant;
 import com.peterhung.hk.demo.rms.rms.securityUtils.JwtUtils;
 import com.peterhung.hk.demo.rms.rms.service.*;
 import com.peterhung.hk.demo.rms.rms.service.Enum.UserType;
-
-import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -52,9 +51,32 @@ public class AuthController {
 	// Success registrations -> login
 	@PostMapping("/registerApplicant")
 	public ResponseEntity<?> registerApplicant(@RequestBody ApplicantRegistrationRequest registrationRequest) {
-		// TODO: implement
-		applicantService.createUser(null);
-		return login(new UserAuthRequest(UserType.APPLICANT, registrationRequest.getUsername(), registrationRequest.getPassword()));
+		try {
+			applicantService.validateAndCreateUser(registrationRequest);
+		} catch (UserExistsException e) {
+			logger.error("Failed to register applicant: " + registrationRequest.getUsername(), e);
+			return ResponseEntity.ok(new SimpleErrorResponse(applicantService.getLastErrorCode(), applicantService.getLastErrorMessage()));
+		} catch (InvalidUserDetailException e) {
+			logger.error("Invalid user details for applicant registration: " + registrationRequest.getUsername(), e);
+			return ResponseEntity.ok(new SimpleErrorResponse(applicantService.getLastErrorCode(), applicantService.getLastErrorMessage()));
+		}
+		
+		ResponseEntity<?> response = login(new UserAuthRequest(UserType.APPLICANT, registrationRequest.getUsername(), registrationRequest.getPassword()));
+		
+		if (response.getStatusCode() == HttpStatus.OK) {
+			AuthResponse authResponse = (AuthResponse) response.getBody();
+			if (authResponse != null) {
+				logger.info("Applicant registered successfully: " + registrationRequest.getUsername());
+			} else {
+				// Rollback user in database
+				applicantService.removeUser(registrationRequest.getUsername());
+				logger.error("Unexpected error: AuthResponse is null");
+			}
+		} else {
+			applicantService.removeUser(registrationRequest.getUsername());
+			logger.error("Failed to register applicant: " + registrationRequest.getUsername());
+		}
+		return response;
 	}
 
 	// Endpoint: /api/login

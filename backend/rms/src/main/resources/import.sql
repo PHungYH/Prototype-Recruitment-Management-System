@@ -28,12 +28,12 @@ CREATE TABLE positions (
 -- APPLICANT PROFILES table
 CREATE TABLE applicant_profiles (
     appl_prof_id INT PRIMARY KEY AUTO_INCREMENT,
-    lastname VARCHAR(50) NOT NULL,
-    firstname VARCHAR(50) NOT NULL,
+    lastname VARCHAR(50),
+    firstname VARCHAR(50),
     alias VARCHAR(50),
-    idcard VARCHAR(20) NOT NULL,
-    date_of_birth DATE NOT NULL,
-    gender VARCHAR(1) NOT NULL CHECK (gender IN ('M', 'F')),
+    idcard VARCHAR(20),
+    date_of_birth DATE,
+    gender VARCHAR(1) CHECK (gender IN ('M', 'F')),
     phone_number VARCHAR(20),
     address VARCHAR(255),
     nationality VARCHAR(50)

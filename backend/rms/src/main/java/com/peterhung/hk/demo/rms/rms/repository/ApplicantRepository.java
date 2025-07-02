@@ -8,4 +8,6 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Integer> {
 	Applicant findByUsername(String username);
 	Applicant findByEmail(String email);
 	Applicant findByUsernameOrEmail(String username, String email);
+	boolean existsByUsername(String username);
+	boolean existsByEmail(String email);
 }

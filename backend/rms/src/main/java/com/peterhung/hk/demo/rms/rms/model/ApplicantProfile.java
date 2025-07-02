@@ -19,11 +19,11 @@ public class ApplicantProfile {
     private String alias;
     private String idcard;
 
-    @Column(name = "date_of_birth", nullable = false)
+    @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 1)
+    @Column(length = 1)
     private Gender gender;
 
     @Column(name = "phone_number")

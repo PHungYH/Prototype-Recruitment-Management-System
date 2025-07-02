@@ -123,4 +123,13 @@ public class AuthControllerTests {
 		assertNotNull(userResponse);
 		assert(userResponse.getUsername()).equals("liamnguyen91");
 	}
+
+	@Test
+	public void testRegisterApplicant() {
+		ApplicantRegistrationRequest request = new ApplicantRegistrationRequest();
+		request.setUsername("hero");
+		request.setEmail("hero@gmail.com");
+		request.setPassword("LongP@ssw0rd");
+		assert(controller.registerApplicant(request).getStatusCode()).equals(HttpStatus.OK);
+	}
 }
