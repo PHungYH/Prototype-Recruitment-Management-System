@@ -27,7 +27,7 @@ const LoginForm = () => {
       localStorage.setItem(appGlobal.storage_key_userType, userType);
       alert('Login successful!');
 
-      navigate('/'+userType.toLowerCase())
+      navigate('/'+userType.toLowerCase()+'/job_applications')
     } catch (error) {
       console.log(error);
       alert('Login failed!');

@@ -29,9 +29,9 @@ INSERT INTO applicant_profiles (lastname, firstname, alias, idcard, date_of_birt
 -- Insert applicants
 -- Raw: P@ssw0rd, Hashed password: $2a$10$9m7pR.K04NZSpYzibpl64uGCt6.sdcq/WkCEMh3LKR2/L3Yijvrya
 INSERT INTO applicants (username, email, password_hash, appl_prof_id) VALUES 
-('johnsmith90', 'john.smith@example.com', '$2a$10$9m7pR.K04NZSpYzibpl64uGCt6.sdcq/WkCEMh3LKR2/L3Yijvrya', 1),
-('emilytaylor93', 'emily.taylor@example.com', '$2a$10$9m7pR.K04NZSpYzibpl64uGCt6.sdcq/WkCEMh3LKR2/L3Yijvrya', 2),
-('liamnguyen91', 'liam.nguyen@example.com', '$2a$10$9m7pR.K04NZSpYzibpl64uGCt6.sdcq/WkCEMh3LKR2/L3Yijvrya', 3);
+('applicant1', 'applicant1@gmail.com', '$2a$10$9m7pR.K04NZSpYzibpl64uGCt6.sdcq/WkCEMh3LKR2/L3Yijvrya', 1),
+('applicant2', 'applicant2@gmail.com', '$2a$10$9m7pR.K04NZSpYzibpl64uGCt6.sdcq/WkCEMh3LKR2/L3Yijvrya', 2),
+('applicant3', 'applicant3@gmail.com', '$2a$10$9m7pR.K04NZSpYzibpl64uGCt6.sdcq/WkCEMh3LKR2/L3Yijvrya', 3);
 
 -- Insert admin data into admins table
 -- Raw: P@ssw0rd, Hashed password: $2a$10$9m7pR.K04NZSpYzibpl64uGCt6.sdcq/WkCEMh3LKR2/L3Yijvrya

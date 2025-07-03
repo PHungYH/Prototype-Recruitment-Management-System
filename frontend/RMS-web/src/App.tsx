@@ -1,7 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
-import AdminPanel from './pages/AdminPanel';
 import appGlobal from './utils/AppGlobal';
+import RegisterPage from './pages/RegisterPage';
+import ApplicantPanelJobApplication from './pages/ApplicantPanelJobApplication';
+import AdminPanelJobApplication from './pages/AdminPanelJobApplication';
 
 function App() {
   return (
@@ -9,7 +11,9 @@ function App() {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path={`/${appGlobal.userType_ADMIN}`} element={<AdminPanel />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path={`/${appGlobal.userType_ADMIN}/job_applications`} element={<AdminPanelJobApplication />} />
+        <Route path={`/${appGlobal.userType_APPLICANT}/job_applications`} element={<ApplicantPanelJobApplication />} />
       </Routes>
     </Router>
   );

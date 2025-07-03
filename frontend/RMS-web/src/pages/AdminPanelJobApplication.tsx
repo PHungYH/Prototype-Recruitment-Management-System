@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import appGlobal from "../utils/AppGlobal";
 import { useAuthGuardPostLogin } from "../utils/ComponentsHelper/AuthGuard";
-import Button from "@mui/material/Button";
 import { AuthHelper } from "../utils/AuthHelper";
 import { useNavigate } from "react-router-dom";
 import { HTTPHelper } from "../utils/HTTPHelper";
+import UnderlineLink from "../components/UnderlineLink";
+import NavBar from "../components/NavBar";
 
 interface CurrentUsernameResponse {
   username: string;
@@ -15,6 +16,15 @@ const AdminPanel = () => {
   const [username, setUsername] = useState('');
 
   useAuthGuardPostLogin();
+
+  const handleClick = (label: string) => {
+    alert(`Clicked ${label}`);
+  };
+
+  const navButtons = [
+    { label: 'Job Applications', onClick: () => handleClick('job_applications') },
+    { label: 'Follow-up History', onClick: () => handleClick('followup_history') }
+  ];
 
   useEffect(() => {
     HTTPHelper.call<CurrentUsernameResponse>(
@@ -35,10 +45,11 @@ const AdminPanel = () => {
   }
 
   return (
-    <div style={{ padding: '2rem' }}>
-      <div className="flex flex-wrap items-center space-x-2">
-        <h2>Welcome, logged in as: {username}!</h2>
-        <Button variant='contained' onClick={handleLogout}>Logout</Button>
+    <div>
+      <div className="w-full bg-gradient-to-b from-gray-300 to-gray-100 flex flex-wrap items-center space-x-2">
+        <h2 className="ml-2">Welcome! logged in as: {username}</h2>
+        <UnderlineLink onClickHandler={handleLogout} >Logout</UnderlineLink>
+        <NavBar buttons={navButtons} />
       </div>
     </div>
   );
