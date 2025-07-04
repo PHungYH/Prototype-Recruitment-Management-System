@@ -11,7 +11,11 @@ interface CurrentUsernameResponse {
   username: string;
 }
 
-const ApplicantPanelJobApplication = () => {
+interface AdminPanelProps {
+  page: string;
+}
+
+const AdminPanel:React.FC<AdminPanelProps> = ({page}) => {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
 
@@ -23,13 +27,13 @@ const ApplicantPanelJobApplication = () => {
 
   const navButtons = [
     { label: 'Job Applications', onClick: () => handleClick('job_applications') },
-    { label: 'Application History', onClick: () => handleClick('application_history') },
-    { label: 'Profile Management', onClick: () => handleClick('profile_management') },
+    { label: 'Follow-up History', onClick: () => handleClick('followup_history') }
   ];
 
   useEffect(() => {
+    console.log("current page:", page);
     HTTPHelper.call<CurrentUsernameResponse>(
-      `${appGlobal.endpoint_auth}/getLoggedInUsername?userType=${appGlobal.userType_APPLICANT}`,
+      `${appGlobal.endpoint_auth}/getLoggedInUsername?userType=${appGlobal.userType_ADMIN}`,
       'GET'
     ).then((response) => {
       setUsername(response?.username);
@@ -56,4 +60,4 @@ const ApplicantPanelJobApplication = () => {
   );
 }
 
-export default ApplicantPanelJobApplication;
+export default AdminPanel;

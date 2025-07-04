@@ -3,7 +3,7 @@ package com.peterhung.hk.demo.rms.rms.service;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.peterhung.hk.demo.rms.rms.dto.request.ApplicantRegistrationRequest;
@@ -19,7 +19,7 @@ public class ApplicantService {
     @Autowired
     private ApplicantProfileRepository applicantProfileRepository;
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     private int lastErrorCode;
 
@@ -107,5 +107,10 @@ public class ApplicantService {
 
     public String getLastErrorMessage() {
         return errorMessages.getOrDefault(lastErrorCode, "");
+    }
+
+    public ApplicantProfile getApplicantProfileByUsername(String username) {
+        Applicant applicant = applicantRepository.findByUsername(username);
+        return applicant.getProfile();
     }
 }

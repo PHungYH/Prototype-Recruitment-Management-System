@@ -33,6 +33,7 @@ public class ApplicantProfile {
 
     private String nationality;
 
+    private String linkedin;
 
     public int getId() {
         return id;
@@ -112,5 +113,13 @@ public class ApplicantProfile {
 
     public void setNationality(String nationality) {
         this.nationality = nationality;
+    }
+
+    public String getLinkedin() {
+        return linkedin;
+    }
+
+    public void setLinkedin(String linkedin) {
+        this.linkedin = linkedin;
     }
 }

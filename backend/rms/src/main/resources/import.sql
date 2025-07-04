@@ -31,12 +31,13 @@ CREATE TABLE applicant_profiles (
     lastname VARCHAR(50),
     firstname VARCHAR(50),
     alias VARCHAR(50),
-    idcard VARCHAR(20),
+    idcard VARCHAR(4),
     date_of_birth DATE,
     gender VARCHAR(1) CHECK (gender IN ('M', 'F')),
     phone_number VARCHAR(20),
     address VARCHAR(255),
-    nationality VARCHAR(50)
+    nationality VARCHAR(50),
+    linkedin VARCHAR(200)
 );
 
 -- APPLICANTS table

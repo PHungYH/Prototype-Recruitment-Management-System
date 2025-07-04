@@ -85,6 +85,7 @@ const RegistrationForm: React.FC = () => {
 							},
 						})}
 						className={style_input}
+						autoComplete="email"
 					/>
 					{errors.email && <p className={style_input_error}>{errors.email.message}</p>}
 				</div>
@@ -106,6 +107,7 @@ const RegistrationForm: React.FC = () => {
 							}
 						})}
 						className={style_input}
+						autoComplete="new-password"
 					/>
 					{errors.password && <p className={style_input_error}>{errors.password.message}</p>}
 				</div>
@@ -121,6 +123,7 @@ const RegistrationForm: React.FC = () => {
 								value === password || 'Passwords do not match',
 						})}
 						className={style_input}
+						autoComplete="new-password"
 					/>
 					{errors.confirmPassword && (
 						<p className={style_input_error}>{errors.confirmPassword.message}</p>

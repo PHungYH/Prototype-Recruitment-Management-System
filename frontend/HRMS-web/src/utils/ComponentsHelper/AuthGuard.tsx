@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthHelper } from '../AuthHelper';
-import appGlobal from '../AppGlobal';
 
 const useAuthGuardPreLogin = () => {
   const navigate = useNavigate();
