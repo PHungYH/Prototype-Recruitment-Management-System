@@ -59,8 +59,7 @@ const validation_pattern_linkedin = {
 
 const options_gender = [
   { value: 'M', label: 'Male' },
-  { value: 'F', label: 'Female' },
-  { value: 'N', label: 'Not Disclose'}
+  { value: 'F', label: 'Female' }
 ];
 
 const options_nationality = countryList().getData();
@@ -158,6 +157,7 @@ const ProfileManagementForm: React.FC = () => {
         profileRequest
       );
       if (reqResult.result) {
+        alert("Saved.")
         window.location.reload();
       } else {
         alert("Failed to save profile.");
