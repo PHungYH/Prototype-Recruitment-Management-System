@@ -27,6 +27,7 @@ export class AuthHelper {
         const token = localStorage.getItem(appGlobal.storage_key_token)
         if (token) {
             localStorage.removeItem(appGlobal.storage_key_token);
+            localStorage.removeItem(appGlobal.storage_key_userType);
         }
     }
 }
