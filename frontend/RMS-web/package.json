@@ -14,9 +14,12 @@
     "@emotion/styled": "^11.14.1",
     "@mui/material": "^7.1.2",
     "@tailwindcss/vite": "^4.1.11",
+    "@types/react-select-country-list": "^2.2.3",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-hook-form": "^7.59.0",
+    "react-select": "^5.10.1",
+    "react-select-country-list": "^2.2.3",
     "tailwindcss": "^4.1.11"
   },
   "devDependencies": {

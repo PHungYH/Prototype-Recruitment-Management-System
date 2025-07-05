@@ -1,9 +1,12 @@
 package com.peterhung.hk.demo.rms.rms.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.peterhung.hk.demo.rms.rms.dto.response.SimpleBooleanResponse;
 import com.peterhung.hk.demo.rms.rms.model.ApplicantProfile;
 import com.peterhung.hk.demo.rms.rms.securityUtils.JwtUtils;
 import com.peterhung.hk.demo.rms.rms.service.ApplicantService;
@@ -13,6 +16,7 @@ import com.peterhung.hk.demo.rms.rms.service.ApplicantService;
 @RestController
 @RequestMapping("/api/applicant")
 public class ApplicantController {
+    private static final Logger logger = LoggerFactory.getLogger(ApplicantController.class);
     private final ApplicantService applicantService;
     private final JwtUtils jwtUtils;
 
@@ -34,9 +38,12 @@ public class ApplicantController {
     }
     
     @PostMapping("/saveProfile")
-    public String saveProfile(@RequestBody String entity) {
-        
-        return entity;
+    public ResponseEntity<?> saveProfile(@RequestHeader String token, @RequestBody ApplicantProfile applicantProfile) {
+        String username = jwtUtils.getUsernameFromToken(token);
+        if (username == null || username.isEmpty())
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
+        return ResponseEntity.ok(new SimpleBooleanResponse(applicantService.saveApplicantProfileByUsername(username, applicantProfile)));
     }
     
 }

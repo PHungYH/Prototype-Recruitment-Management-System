@@ -22,9 +22,9 @@ INSERT INTO positions (position_name) VALUES
 
 -- Insert applicant profiles
 INSERT INTO applicant_profiles (lastname, firstname, alias, idcard, date_of_birth, gender, phone_number, address, nationality, linkedin) VALUES 
-('Smith', 'John', 'Johnny', 'A123', '1990-05-12', 'M', '90000001', '101 Main Street, Cityville', 'USA', 'https://www.linkedin.com/in/peter-hung-a31806193/'),
-('Taylor', 'Emily', NULL, 'A234', '1993-09-30', 'F', '90000002', '202 Oak Avenue, Townsville', 'Canada', 'https://www.linkedin.com/in/peter-hung-a31806193/'),
-('Nguyen', 'Liam', 'Lee', 'A345', '1991-12-18', 'M', '90000003', '303 Pine Road, Villagetown', 'Vietnam', 'https://www.linkedin.com/in/peter-hung-a31806193/');
+('Smith', 'John', 'Johnny', 'A123', '1990-05-12', 'M', '90000001', '101 Main Street, Cityville', 'US', 'peter-hung-a31806193'),
+('Taylor', 'Emily', NULL, 'A234', '1993-09-30', 'F', '90000002', '202 Oak Avenue, Townsville', 'HK', 'peter-hung-a31806193'),
+('Nguyen', 'Liam', 'Lee', 'A345', '1991-12-18', 'M', '90000003', '303 Pine Road, Villagetown', 'HK', 'peter-hung-a31806193');
 
 -- Insert applicants
 -- Raw: P@ssw0rd, Hashed password: $2a$10$9m7pR.K04NZSpYzibpl64uGCt6.sdcq/WkCEMh3LKR2/L3Yijvrya

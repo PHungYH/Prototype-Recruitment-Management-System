@@ -36,7 +36,7 @@ CREATE TABLE applicant_profiles (
     gender VARCHAR(1) CHECK (gender IN ('M', 'F')),
     phone_number VARCHAR(20),
     address VARCHAR(255),
-    nationality VARCHAR(50),
+    nationality VARCHAR(2),
     linkedin VARCHAR(200)
 );
 

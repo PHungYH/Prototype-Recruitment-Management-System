@@ -113,4 +113,13 @@ public class ApplicantService {
         Applicant applicant = applicantRepository.findByUsername(username);
         return applicant.getProfile();
     }
+
+    public boolean saveApplicantProfileByUsername(String username, ApplicantProfile profile) {
+        Applicant applicant = applicantRepository.findByUsername(username);
+        if (applicant == null)
+            return false;
+        profile.setId(applicant.getProfile().getId());
+        applicantProfileRepository.save(profile);
+        return true;
+    }
 }
