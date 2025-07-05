@@ -9,11 +9,11 @@
 
 ## Milestones
 
-### Completed Features
+### Completed Features (full stack)
 
 #### Recruitment Management System (RMS)
-1. Applicant and admin **login/registration**, with **session management**
-2. **Profile management**
+1. Applicant and admin login/registration, with session management
+2. Profile management
 
 #### Employee Management System (HRMS)
-1. **Login**
+1. Login
