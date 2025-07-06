@@ -4,12 +4,13 @@ import appGlobal from './utils/AppGlobal';
 import RegisterPage from './pages/RegisterPage';
 import AdminPanel from './pages/AdminPanel';
 import ApplicantPanel from './pages/ApplicantPanel';
+import Home from './pages/Home';
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LoginPage />} />
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path={`/${appGlobal.userType_ADMIN}/job_applications`} element={<AdminPanel page='job_applications'/>} />

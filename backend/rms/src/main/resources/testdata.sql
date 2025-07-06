@@ -43,6 +43,23 @@ INSERT INTO admins (username, password_hash) VALUES
 -- Insert job openings
 INSERT INTO job_openings (job_title, emp_type_id, dept_id, job_description, job_requirements, job_posted_date, is_active) VALUES 
 ('Frontend Developer', 1, 1, 'Develop UI components and collaborate with backend team.', 'HTML, CSS, JavaScript, React', '2025-06-01', TRUE),
+('Frontend Developer', 1, 1, 'Develop UI components and collaborate with backend team.', 'HTML, CSS, JavaScript, React', '2025-06-01', TRUE),
+('Frontend Developer', 1, 1, 'Develop UI components and collaborate with backend team.', 'HTML, CSS, JavaScript, React', '2025-06-01', TRUE),
+('Frontend Developer', 1, 1, 'Develop UI components and collaborate with backend team.', 'HTML, CSS, JavaScript, React', '2025-06-01', TRUE),
+('Frontend Developer', 1, 1, 'Develop UI components and collaborate with backend team.', 'HTML, CSS, JavaScript, React', '2025-06-01', TRUE),
+('Frontend Developer', 1, 1, 'Develop UI components and collaborate with backend team.', 'HTML, CSS, JavaScript, React', '2025-06-01', TRUE),
+('Frontend Developer', 1, 1, 'Develop UI components and collaborate with backend team.', 'HTML, CSS, JavaScript, React', '2025-06-01', TRUE),
+('Frontend Developer', 1, 1, 'Develop UI components and collaborate with backend team.', 'HTML, CSS, JavaScript, React', '2025-06-01', TRUE),
+('Frontend Developer', 1, 1, 'Develop UI components and collaborate with backend team.', 'HTML, CSS, JavaScript, React', '2025-06-01', TRUE),
+('Frontend Developer', 1, 1, 'Develop UI components and collaborate with backend team.', 'HTML, CSS, JavaScript, React', '2025-06-01', TRUE),
+('Frontend Developer', 1, 1, 'Develop UI components and collaborate with backend team.', 'HTML, CSS, JavaScript, React', '2025-06-01', TRUE),
+('Frontend Developer', 1, 1, 'Develop UI components and collaborate with backend team.', 'HTML, CSS, JavaScript, React', '2025-06-01', TRUE),
+('Frontend Developer', 1, 1, 'Develop UI components and collaborate with backend team.', 'HTML, CSS, JavaScript, React', '2025-06-01', TRUE),
+('Frontend Developer', 1, 1, 'Develop UI components and collaborate with backend team.', 'HTML, CSS, JavaScript, React', '2025-06-01', TRUE),
+('Frontend Developer', 1, 1, 'Develop UI components and collaborate with backend team.', 'HTML, CSS, JavaScript, React', '2025-06-01', TRUE),
+('Frontend Developer', 1, 1, 'Develop UI components and collaborate with backend team.', 'HTML, CSS, JavaScript, React', '2025-06-01', TRUE),
+('Frontend Developer', 1, 1, 'Develop UI components and collaborate with backend team.', 'HTML, CSS, JavaScript, React', '2025-06-01', TRUE),
+('Frontend Developer', 1, 1, 'Develop UI components and collaborate with backend team.', 'HTML, CSS, JavaScript, React', '2025-06-01', TRUE),
 ('HR Assistant', 1, 2, 'Assist with recruitment and employee onboarding.', 'Strong communication, organizational skills', '2025-06-10', TRUE),
 ('Marketing Intern', 2, 3, 'Support digital marketing campaigns and content creation.', 'Social media, Canva, basic SEO', '2025-06-15', TRUE);
 

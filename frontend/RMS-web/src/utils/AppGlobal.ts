@@ -2,6 +2,7 @@ class AppGlobal {
   public api_url: string = 'http://localhost:8009/api';
   public endpoint_auth: string = '/auth';
   public endpoint_applicant: string = '/applicant';
+  public endpoint_job: string = '/job'
   
   public storage_key_token: string = 'token';
   public storage_key_userType:string = 'userType';
