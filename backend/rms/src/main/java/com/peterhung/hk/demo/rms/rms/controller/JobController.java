@@ -1,6 +1,7 @@
 package com.peterhung.hk.demo.rms.rms.controller;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.web.PagedModel;
 import org.springframework.web.bind.annotation.*;
 
 import com.peterhung.hk.demo.rms.rms.model.*;
@@ -16,7 +17,8 @@ public class JobController {
 	}
 
 	@GetMapping("/getActiveJobs")
-	public Page<JobOpening> getActiveJobs(@RequestParam(defaultValue = "0") int page) {
-		return jobService.getPaginatedActiveJobOpenings(page);
+	public PagedModel<JobOpening> getActiveJobs(@RequestParam(defaultValue = "0") int page) {
+		Page<JobOpening> resPage = jobService.getPaginatedActiveJobOpenings(page);
+		return new PagedModel<>(resPage);
 	}
 }

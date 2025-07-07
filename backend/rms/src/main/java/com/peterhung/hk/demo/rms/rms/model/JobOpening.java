@@ -18,6 +18,8 @@ public class JobOpening {
     @ManyToOne
     @JoinColumn(name="dept_id")
     private Department belongingDepartment;
+    @Column(name="job_description")
+    private String jobDescription;
     @Column(name="job_requirements")
     private String jobRequirement;
     @Column(name="job_posted_date")
@@ -48,6 +50,12 @@ public class JobOpening {
     }
     public void setBelongingDepartment(Department belongingDepartment) {
         this.belongingDepartment = belongingDepartment;
+    }
+    public String getJobDescription() {
+        return jobDescription;
+    }
+    public void setJobDescription(String jobDescription) {
+        this.jobDescription = jobDescription;
     }
     public String getJobRequirement() {
         return jobRequirement;
