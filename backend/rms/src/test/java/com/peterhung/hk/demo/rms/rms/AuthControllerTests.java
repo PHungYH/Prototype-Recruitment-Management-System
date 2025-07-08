@@ -81,7 +81,7 @@ public class AuthControllerTests {
 		assertNotNull(authResponse);
 
 		String token = authResponse.getToken();
-		ResponseEntity<?> responseName = controller.getLoggedInUsername(token, UserType.ADMIN);
+		ResponseEntity<?> responseName = controller.getLoggedInUsername(token);
 		assert(responseName.getStatusCode()).equals(HttpStatus.OK);
 		CurrentUsernameResponse userResponse = (CurrentUsernameResponse) responseName.getBody();
 		assertNotNull(userResponse);
@@ -99,7 +99,7 @@ public class AuthControllerTests {
 		assertNotNull(authResponse);
 
 		String token = authResponse.getToken();
-		ResponseEntity<?> responseName = controller.getLoggedInUsername(token, UserType.APPLICANT);
+		ResponseEntity<?> responseName = controller.getLoggedInUsername(token);
 		assert(responseName.getStatusCode()).equals(HttpStatus.OK);
 		CurrentUsernameResponse userResponse = (CurrentUsernameResponse) responseName.getBody();
 		assertNotNull(userResponse);
@@ -117,7 +117,7 @@ public class AuthControllerTests {
 		assertNotNull(authResponse);
 
 		String token = authResponse.getToken();
-		ResponseEntity<?> responseName = controller.getLoggedInUsername(token, UserType.APPLICANT);
+		ResponseEntity<?> responseName = controller.getLoggedInUsername(token);
 		assert(responseName.getStatusCode()).equals(HttpStatus.OK);
 		CurrentUsernameResponse userResponse = (CurrentUsernameResponse) responseName.getBody();
 		assertNotNull(userResponse);

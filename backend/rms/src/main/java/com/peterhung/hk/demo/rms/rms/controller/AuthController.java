@@ -90,7 +90,7 @@ public class AuthController {
 				logger.info("Unexpected error when getting admin object");
 				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 			}
-			String token = jwtUtils.generateToken(admin.getUsername());
+			String token = jwtUtils.generateToken(admin.getUsername(), UserType.ADMIN);
 			logger.info("Success login attempt, admin: " + admin.getUsername());
 			return ResponseEntity.ok(new AuthResponse(token));
 		} else if (authRequest.getUserType() == UserType.APPLICANT
@@ -100,7 +100,7 @@ public class AuthController {
 				logger.info("Unexpected error when getting applicant object");
 				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 			}
-			String token = jwtUtils.generateToken(applicant.getUsername());
+			String token = jwtUtils.generateToken(applicant.getUsername(), UserType.APPLICANT);
 			logger.info("Success login attempt, applicant: " + applicant.getUsername());
 			return ResponseEntity.ok(new AuthResponse(token));
 		} else {
@@ -123,18 +123,21 @@ public class AuthController {
 	// Endpoint: /api/getLoggedInUsername
 	// Get the currently logged-in username.
 	@GetMapping("/getLoggedInUsername")
-	public ResponseEntity<?> getLoggedInUsername(@RequestHeader String token, @RequestParam UserType userType) {
+	public ResponseEntity<?> getLoggedInUsername(@RequestHeader String token) {
+		String[] usernameType = jwtUtils.getUsernameTypeFromToken(token);
+		if (usernameType == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
+
 		UserDetails userDetails;
-		if (userType == UserType.ADMIN) {
-			userDetails = adminUserDetailsServiceImpl
-					.loadUserByUsername(jwtUtils.getUsernameFromToken(token));
+		if (usernameType[1].equals(UserType.ADMIN.toString())) {
+			userDetails = adminUserDetailsServiceImpl.loadUserByUsername(usernameType[0]);
 			Admin admin = adminUserDetailsServiceImpl.getAdmin();
 			if (admin == null) {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 			}
-		} else if (userType == UserType.APPLICANT) {
-			userDetails = applicantUserDetailsServiceImpl
-					.loadUserByUsername(jwtUtils.getUsernameFromToken(token));
+		} else if (usernameType[1].equals(UserType.APPLICANT.toString())) {
+			userDetails = applicantUserDetailsServiceImpl.loadUserByUsername(usernameType[0]);
 			Applicant applicant = applicantUserDetailsServiceImpl.getApplicant();
 			if (applicant == null) {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -142,7 +145,7 @@ public class AuthController {
 		} else {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid user type");
 		}
-		
+
 		return ResponseEntity.ok(new CurrentUsernameResponse(userDetails.getUsername()));
 	}
 

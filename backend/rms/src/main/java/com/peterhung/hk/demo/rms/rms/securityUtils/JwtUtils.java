@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.peterhung.hk.demo.rms.rms.controller.AuthController;
+import com.peterhung.hk.demo.rms.rms.service.Enum.UserType;
 
 import java.util.Date;
 
@@ -24,21 +25,28 @@ public class JwtUtils {
 		key = secretGenerator.getSecretBytes();
 	}
     // Generate JWT token
-    public String generateToken(String username) {
+    public String generateToken(String username, UserType userType) {
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(username + ":" + userType)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(Keys.hmacShaKeyFor(key))
                 .compact();
     }
     // Get username from JWT token
-    public String getUsernameFromToken(String token) {
-        return Jwts.parserBuilder()
+    public String[] getUsernameTypeFromToken(String token) {
+        String subject = Jwts.parserBuilder()
                 .setSigningKey(key).build()
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
+        if (subject != null && !subject.isEmpty()) {
+            String[] parts = subject.split(":");
+            if (parts.length == 2) {
+                return parts; // returns [username, userType]
+            }
+        }
+        return null;
     }
     // Validate JWT token
     public boolean validateJwtToken(String token) {

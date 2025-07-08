@@ -10,6 +10,7 @@ import com.peterhung.hk.demo.rms.rms.dto.response.SimpleBooleanResponse;
 import com.peterhung.hk.demo.rms.rms.model.ApplicantProfile;
 import com.peterhung.hk.demo.rms.rms.securityUtils.JwtUtils;
 import com.peterhung.hk.demo.rms.rms.service.ApplicantService;
+import com.peterhung.hk.demo.rms.rms.service.Enum.UserType;
 
 
 
@@ -27,11 +28,11 @@ public class ApplicantController {
 
     @GetMapping("/getProfile")
     public ResponseEntity<?> getProfile(@RequestHeader String token) {
-        String username = jwtUtils.getUsernameFromToken(token);
-        if (username == null || username.isEmpty())
+        String[] usernameType = jwtUtils.getUsernameTypeFromToken(token);
+        if (usernameType == null || !usernameType[1].equals(UserType.APPLICANT.toString())) 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
-        ApplicantProfile applicantProfile = applicantService.getApplicantProfileByUsername(username);
+        ApplicantProfile applicantProfile = applicantService.getApplicantProfileByUsername(usernameType[0]);
         if (applicantProfile == null)
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         return ResponseEntity.ok(applicantProfile);
@@ -39,11 +40,10 @@ public class ApplicantController {
     
     @PostMapping("/saveProfile")
     public ResponseEntity<?> saveProfile(@RequestHeader String token, @RequestBody ApplicantProfile applicantProfile) {
-        String username = jwtUtils.getUsernameFromToken(token);
-        if (username == null || username.isEmpty())
+        String[] usernameType = jwtUtils.getUsernameTypeFromToken(token);
+        if (usernameType == null || !usernameType[1].equals(UserType.APPLICANT.toString())) 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
-        return ResponseEntity.ok(new SimpleBooleanResponse(applicantService.saveApplicantProfileByUsername(username, applicantProfile)));
+        return ResponseEntity.ok(new SimpleBooleanResponse(applicantService.saveApplicantProfileByUsername(usernameType[0], applicantProfile)));
     }
-    
 }
