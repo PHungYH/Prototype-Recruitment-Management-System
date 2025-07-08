@@ -9,6 +9,7 @@ const LoginPage = () => {
     <div style={{ padding: '2rem' }}>
       <LoginForm/>
       <UnderlineLink href="/register">Or register here</UnderlineLink>
+      <UnderlineLink className="ml-5" href="/">Return to home page</UnderlineLink>
     </div>
   );
 }

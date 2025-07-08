@@ -7,6 +7,7 @@ import { HTTPHelper } from "../utils/HTTPHelper";
 import UnderlineLink from "../components/UnderlineLink";
 import NavBar from "../components/NavBar";
 import ProfileManagementForm from "../components/ProfileManagementForm";
+import Home from "./Home";
 
 interface CurrentUsernameTypeResponse {
   username: string,
@@ -77,12 +78,13 @@ const ApplicantPanel:React.FC<ApplicantPanelProps> = ({page}) => {
   return (
     <div>
       <div className="w-full bg-gradient-to-b from-gray-300 to-gray-100 flex flex-wrap items-center space-x-2">
+        <h2 className="ml-2 text-2xl">🛰️SpaceHK</h2>
         <h2 className="ml-2">Welcome! logged in as: {username}</h2>
         <UnderlineLink onClickHandler={handleLogout} >Logout</UnderlineLink>
         <NavBar buttons={navButtons} />
       </div>
       <div>
-        {showJobApplications && <h1>A</h1>}
+        {showJobApplications && <Home loginMode={true}/>}
         {showApplicationHistory && <h1>B</h1>}
         {showProfileManagement && <ProfileManagementForm/>}
       </div>

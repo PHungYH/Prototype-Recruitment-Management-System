@@ -10,7 +10,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home loginMode = {false}/>} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path={`/${appGlobal.userType_ADMIN}/job_applications`} element={<AdminPanel page='job_applications'/>} />

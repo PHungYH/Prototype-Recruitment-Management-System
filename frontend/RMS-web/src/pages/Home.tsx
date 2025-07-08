@@ -7,33 +7,33 @@ import { HTTPHelper } from '../utils/HTTPHelper';
 import appGlobal from '../utils/AppGlobal';
 import type { Job, JobListResponse } from '../commonInterface/JobListResponse.interface';
 
-const Home = () => {
+type HomeProps = {
+  loginMode: boolean
+}
+
+const Home:React.FC<HomeProps> = ({loginMode}) => {
   const navigate = useNavigate();
   const hasFetchedJobList = useRef(false);
   const [jobInfoData, setJobInfoData] = useState<Job[]>([]);
-  const [rawResponse, setRawResponse] = useState<JobListResponse>({} as JobListResponse);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
-  const [totalNumOfResults, setTotalNumOfResults] = useState(0);
 
-  useAuthGuardPreLogin();
+  if (!loginMode)
+    useAuthGuardPreLogin();
 
   const navButtons = [
     { label: 'Login', onClick: () => navigate('/login') }
   ];
 
-  useEffect(() => {
-    if (!hasFetchedJobList.current) {
-      hasFetchedJobList.current = true;
+  const loadPage = (page: number) => {
+    hasFetchedJobList.current = true;
       HTTPHelper.call<JobListResponse>(
-        `${appGlobal.endpoint_job}/getActiveJobs`,
+        `${appGlobal.endpoint_job}/getActiveJobs?page=${page}`,
         'GET'
       ).then((response) => {
         console.log(response);
-        setRawResponse(response);
-        setCurrentPage(response.page.number + 1);
+        setCurrentPage(response.page.number);
         setTotalPage(response.page.totalPages);
-        setTotalNumOfResults(response.page.totalElements);
 
         // fill in job info cards
         const tmpJobInfo = [] as Job[];
@@ -44,8 +44,17 @@ const Home = () => {
       }).catch((error) => {
         console.error("Error fetching data:", error);
       });
+  }
+
+  useEffect(() => {
+    if (!hasFetchedJobList.current) {
+      loadPage(currentPage);
     }
   }, []);
+
+  const onPageChanged = (page:number) => {
+    loadPage(page);
+  }
 
   // ** old **
   // return (
@@ -63,6 +72,8 @@ const Home = () => {
 
   return (
     <div className="flex flex-col h-screen">
+
+      {!loginMode && (
       <div className="w-full justify-between bg-gradient-to-b from-gray-300 to-gray-100 flex flex-wrap items-center space-x-2">
         <div className="flex justify-start">
           <h2 className="ml-2 text-2xl">🛰️SpaceHK</h2>
@@ -70,10 +81,13 @@ const Home = () => {
         <div className="flex justify-end">
           <NavBar buttons={navButtons} />
         </div>
-      </div>
+      </div>)}
 
       <div className="overflow-auto">
-        {jobInfoData.length > 0 && <JobInfoList jobs={jobInfoData} />}
+        {jobInfoData.length > 0 && <JobInfoList currentPage={currentPage} 
+                                                totalPage={totalPage}
+                                                onPageChanged={onPageChanged}
+                                                jobs={jobInfoData} />}
       </div>
     </div>
   );
