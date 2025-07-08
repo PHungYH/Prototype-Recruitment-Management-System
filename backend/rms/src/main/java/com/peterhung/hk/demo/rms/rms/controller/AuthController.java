@@ -104,7 +104,7 @@ public class AuthController {
 			logger.info("Success login attempt, applicant: " + applicant.getUsername());
 			return ResponseEntity.ok(new AuthResponse(token));
 		} else {
-			logger.info("Failed login attempt, admin: " + authRequest.getUsernameOrEmail());
+			logger.info("Failed login attempt, user: " + authRequest.getUsernameOrEmail());
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 	}
@@ -122,8 +122,8 @@ public class AuthController {
 
 	// Endpoint: /api/getLoggedInUsername
 	// Get the currently logged-in username.
-	@GetMapping("/getLoggedInUsername")
-	public ResponseEntity<?> getLoggedInUsername(@RequestHeader String token) {
+	@GetMapping("/getLoggedInUsernameType")
+	public ResponseEntity<?> getLoggedInUsernameType(@RequestHeader String token) {
 		String[] usernameType = jwtUtils.getUsernameTypeFromToken(token);
 		if (usernameType == null) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -146,7 +146,7 @@ public class AuthController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid user type");
 		}
 
-		return ResponseEntity.ok(new CurrentUsernameResponse(userDetails.getUsername()));
+		return ResponseEntity.ok(new CurrentUsernameTypeResponse(userDetails.getUsername(), usernameType[1]));
 	}
 
 }

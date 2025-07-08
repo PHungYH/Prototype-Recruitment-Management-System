@@ -8,8 +8,9 @@ import UnderlineLink from "../components/UnderlineLink";
 import NavBar from "../components/NavBar";
 import ProfileManagementForm from "../components/ProfileManagementForm";
 
-interface CurrentUsernameResponse {
-  username: string;
+interface CurrentUsernameTypeResponse {
+  username: string,
+  userType: string;
 }
 
 interface ApplicantPanelProps {
@@ -56,8 +57,8 @@ const ApplicantPanel:React.FC<ApplicantPanelProps> = ({page}) => {
   useEffect(() => {
     console.log("current page:", page);
     loadContent(page);
-    HTTPHelper.call<CurrentUsernameResponse>(
-      `${appGlobal.endpoint_auth}/getLoggedInUsername?userType=${appGlobal.userType_APPLICANT}`,
+    HTTPHelper.call<CurrentUsernameTypeResponse>(
+      `${appGlobal.endpoint_auth}/getLoggedInUsernameType`,
       'GET'
     ).then((response) => {
       setUsername(response?.username);
@@ -70,7 +71,7 @@ const ApplicantPanel:React.FC<ApplicantPanelProps> = ({page}) => {
   const handleLogout = () => {
     AuthHelper.clearSession();
     alert("You are now logged out.");
-    navigate("/login");
+    navigate("/");
   }
 
   return (

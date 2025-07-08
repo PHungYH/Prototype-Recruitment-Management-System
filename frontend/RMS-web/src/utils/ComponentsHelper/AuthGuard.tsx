@@ -8,12 +8,14 @@ const useAuthGuardPreLogin = () => {
 
   useEffect(() => {
     console.log("Check session");
-    AuthHelper.isLoggedIn().then((result) => {
-      if (result) {
-        navigate(`/${localStorage.getItem(appGlobal.storage_key_userType)?.toLowerCase()}`);
-      } else
-        AuthHelper.clearSession();  
-    })
+    if (localStorage.getItem(appGlobal.storage_key_token)) {
+      AuthHelper.isLoggedIn().then((result) => {
+        if (result) {
+          navigate(`/${localStorage.getItem(appGlobal.storage_key_userType)?.toLowerCase()}/job_applications`);
+        } else
+          AuthHelper.clearSession();
+      })
+    }
   }, [navigate]);
 };
 

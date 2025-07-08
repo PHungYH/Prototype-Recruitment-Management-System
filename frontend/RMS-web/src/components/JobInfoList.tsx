@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import JobInfoCard from './JobInfoCard';
 import type { Job } from '../commonInterface/JobListResponse.interface';
+import appGlobal from '../utils/AppGlobal';
+import { HTTPHelper } from '../utils/HTTPHelper';
+
+interface CurrentUsernameTypeResponse {
+  username: string,
+  userType: string;
+}
 
 interface JobListProps {
   jobs: Job[];
@@ -8,13 +15,28 @@ interface JobListProps {
 
 const JobList: React.FC<JobListProps> = ({ jobs }) => {
   const [currentJob, setCurrentJob] = useState<Job>({} as Job);
+  const [currentUserType, setCurrentUserType] = useState('');
   const handleJob = (job: Job): void => {
     setCurrentJob(job);
   }
 
   useEffect(() => {
+    // Show first job by default
     if (jobs.length > 0)
       setCurrentJob(jobs[0]);
+
+    // Set authenticated user type
+    if (localStorage.getItem(appGlobal.storage_key_token)) {
+      HTTPHelper.call<CurrentUsernameTypeResponse>(
+        `${appGlobal.endpoint_auth}/getLoggedInUsernameType`,
+        'GET'
+      ).then((response) => {
+        setCurrentUserType(response?.userType);
+      }).catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+    }
+
   }, []);
 
   return (
@@ -37,6 +59,8 @@ const JobList: React.FC<JobListProps> = ({ jobs }) => {
         <h2>Department: {currentJob?.belongingDepartment?.name}</h2>
         <h2>Description: {currentJob?.jobDescription}</h2>
         <h2>Requirements: {currentJob.jobRequirement}</h2>
+
+        {currentUserType === '' && <h2 className='text-red-500'>Login to apply.</h2>}
       </div>
     </div>
   );

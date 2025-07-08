@@ -81,9 +81,9 @@ public class AuthControllerTests {
 		assertNotNull(authResponse);
 
 		String token = authResponse.getToken();
-		ResponseEntity<?> responseName = controller.getLoggedInUsername(token);
+		ResponseEntity<?> responseName = controller.getLoggedInUsernameType(token);
 		assert(responseName.getStatusCode()).equals(HttpStatus.OK);
-		CurrentUsernameResponse userResponse = (CurrentUsernameResponse) responseName.getBody();
+		CurrentUsernameTypeResponse userResponse = (CurrentUsernameTypeResponse) responseName.getBody();
 		assertNotNull(userResponse);
 		assert(userResponse.getUsername()).equals("admin1");
 	}
@@ -99,9 +99,9 @@ public class AuthControllerTests {
 		assertNotNull(authResponse);
 
 		String token = authResponse.getToken();
-		ResponseEntity<?> responseName = controller.getLoggedInUsername(token);
-		assert(responseName.getStatusCode()).equals(HttpStatus.OK);
-		CurrentUsernameResponse userResponse = (CurrentUsernameResponse) responseName.getBody();
+		ResponseEntity<?> responseNameType = controller.getLoggedInUsernameType(token);
+		assert(responseNameType.getStatusCode()).equals(HttpStatus.OK);
+		CurrentUsernameTypeResponse userResponse = (CurrentUsernameTypeResponse) responseNameType.getBody();
 		assertNotNull(userResponse);
 		assert(userResponse.getUsername()).equals("emilytaylor93");
 	}
@@ -117,9 +117,9 @@ public class AuthControllerTests {
 		assertNotNull(authResponse);
 
 		String token = authResponse.getToken();
-		ResponseEntity<?> responseName = controller.getLoggedInUsername(token);
-		assert(responseName.getStatusCode()).equals(HttpStatus.OK);
-		CurrentUsernameResponse userResponse = (CurrentUsernameResponse) responseName.getBody();
+		ResponseEntity<?> responseNameType = controller.getLoggedInUsernameType(token);
+		assert(responseNameType.getStatusCode()).equals(HttpStatus.OK);
+		CurrentUsernameTypeResponse userResponse = (CurrentUsernameTypeResponse) responseNameType.getBody();
 		assertNotNull(userResponse);
 		assert(userResponse.getUsername()).equals("liamnguyen91");
 	}

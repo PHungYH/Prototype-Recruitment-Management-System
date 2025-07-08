@@ -6,11 +6,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.peterhung.hk.demo.rms.rms.annotations.RequireApplicantToken;
 import com.peterhung.hk.demo.rms.rms.dto.response.SimpleBooleanResponse;
 import com.peterhung.hk.demo.rms.rms.model.ApplicantProfile;
 import com.peterhung.hk.demo.rms.rms.securityUtils.JwtUtils;
 import com.peterhung.hk.demo.rms.rms.service.ApplicantService;
-import com.peterhung.hk.demo.rms.rms.service.Enum.UserType;
 
 
 
@@ -27,10 +27,9 @@ public class ApplicantController {
     }
 
     @GetMapping("/getProfile")
+    @RequireApplicantToken
     public ResponseEntity<?> getProfile(@RequestHeader String token) {
         String[] usernameType = jwtUtils.getUsernameTypeFromToken(token);
-        if (usernameType == null || !usernameType[1].equals(UserType.APPLICANT.toString())) 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
         ApplicantProfile applicantProfile = applicantService.getApplicantProfileByUsername(usernameType[0]);
         if (applicantProfile == null)
@@ -39,10 +38,9 @@ public class ApplicantController {
     }
     
     @PostMapping("/saveProfile")
+    @RequireApplicantToken
     public ResponseEntity<?> saveProfile(@RequestHeader String token, @RequestBody ApplicantProfile applicantProfile) {
         String[] usernameType = jwtUtils.getUsernameTypeFromToken(token);
-        if (usernameType == null || !usernameType[1].equals(UserType.APPLICANT.toString())) 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
         return ResponseEntity.ok(new SimpleBooleanResponse(applicantService.saveApplicantProfileByUsername(usernameType[0], applicantProfile)));
     }

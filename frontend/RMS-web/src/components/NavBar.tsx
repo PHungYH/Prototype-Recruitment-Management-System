@@ -12,7 +12,7 @@ const NavBar: React.FC<NavBarProps> = ({ buttons }) => {
           <button
             key={index}
             onClick={btn.onClick}
-            className="text-white bg-gray-500 hover:bg-gray-400 px-4 py-2 rounded transition duration-200"
+            className="text-white bg-gray-500 hover:bg-gray-400 px-4 py-2 rounded transition duration-200 cursor-pointer"
           >
             {btn.label}
           </button>
