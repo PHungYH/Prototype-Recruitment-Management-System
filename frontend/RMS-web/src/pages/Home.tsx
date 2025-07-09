@@ -7,6 +7,12 @@ import { HTTPHelper } from '../utils/HTTPHelper';
 import appGlobal from '../utils/AppGlobal';
 import type { Job, JobListResponse } from '../commonInterface/JobListResponse.interface';
 
+
+interface CurrentUsernameTypeResponse {
+  username: string,
+  userType: string;
+}
+
 type HomeProps = {
   loginMode: boolean
 }
@@ -17,6 +23,7 @@ const Home:React.FC<HomeProps> = ({loginMode}) => {
   const [jobInfoData, setJobInfoData] = useState<Job[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
+  const [currentUserType, setCurrentUserType] = useState('');
 
   if (!loginMode)
     useAuthGuardPreLogin();
@@ -50,6 +57,19 @@ const Home:React.FC<HomeProps> = ({loginMode}) => {
     if (!hasFetchedJobList.current) {
       loadPage(currentPage);
     }
+
+    // Set authenticated user type
+    if (localStorage.getItem(appGlobal.storage_key_token)) {
+      HTTPHelper.call<CurrentUsernameTypeResponse>(
+        `${appGlobal.endpoint_auth}/getLoggedInUsernameType`,
+        'GET'
+      ).then((response) => {
+        setCurrentUserType(response?.userType);
+      }).catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+    }
+
   }, []);
 
   const onPageChanged = (page:number) => {
@@ -87,6 +107,7 @@ const Home:React.FC<HomeProps> = ({loginMode}) => {
         {jobInfoData.length > 0 && <JobInfoList currentPage={currentPage} 
                                                 totalPage={totalPage}
                                                 onPageChanged={onPageChanged}
+                                                currentUserType={currentUserType}
                                                 jobs={jobInfoData} />}
       </div>
     </div>

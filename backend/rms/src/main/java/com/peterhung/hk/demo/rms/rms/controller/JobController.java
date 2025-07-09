@@ -2,18 +2,28 @@ package com.peterhung.hk.demo.rms.rms.controller;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.web.PagedModel;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.peterhung.hk.demo.rms.rms.annotations.RequireApplicantToken;
+import com.peterhung.hk.demo.rms.rms.dto.request.ApplicationRequest;
+import com.peterhung.hk.demo.rms.rms.dto.response.SimpleBooleanResponse;
+import com.peterhung.hk.demo.rms.rms.dto.response.SimpleErrorResponse;
+import com.peterhung.hk.demo.rms.rms.exceptions.InvalidJobApplicationException;
 import com.peterhung.hk.demo.rms.rms.model.*;
+import com.peterhung.hk.demo.rms.rms.securityUtils.JwtUtils;
 import com.peterhung.hk.demo.rms.rms.service.JobService;
 
 @RestController
 @RequestMapping("/api/job")
 public class JobController {
 	private final JobService jobService;
+	private final JwtUtils jwtUtils;
 	
-	public JobController(JobService jobService) {
+	public JobController(JobService jobService, JwtUtils jwtUtils) {
 		this.jobService = jobService;
+		this.jwtUtils = jwtUtils;
 	}
 
 	@GetMapping("/getActiveJobs")
@@ -21,4 +31,17 @@ public class JobController {
 		Page<JobOpening> resPage = jobService.getPaginatedActiveJobOpenings(page);
 		return new PagedModel<>(resPage);
 	}
+
+	@PostMapping("/applyJob")
+    @RequireApplicantToken
+    public ResponseEntity<?> applyJob(@RequestHeader String token, @RequestBody ApplicationRequest request) {
+        String[] usernameType = jwtUtils.getUsernameTypeFromToken(token);
+        try {
+			jobService.addApplication(usernameType[0], request.getJobId());
+		} catch (InvalidJobApplicationException e) {
+			return ResponseEntity.ok(new SimpleErrorResponse(jobService.getLastErrorCode(), jobService.getLastErrorMessage()));
+		}
+		
+		return ResponseEntity.ok(new SimpleBooleanResponse(true));
+    }
 }
