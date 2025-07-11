@@ -8,6 +8,7 @@ import UnderlineLink from "../components/UnderlineLink";
 import NavBar from "../components/NavBar";
 import ProfileManagementForm from "../components/ProfileManagementForm";
 import Home from "./Home";
+import ApplicationHistory from "./ApplicationHistory";
 
 interface CurrentUsernameTypeResponse {
   username: string,
@@ -85,7 +86,7 @@ const ApplicantPanel:React.FC<ApplicantPanelProps> = ({page}) => {
       </div>
       <div>
         {showJobApplications && <Home loginMode={true}/>}
-        {showApplicationHistory && <h1>B</h1>}
+        {showApplicationHistory && <ApplicationHistory/>}
         {showProfileManagement && <ProfileManagementForm/>}
       </div>
     </div>

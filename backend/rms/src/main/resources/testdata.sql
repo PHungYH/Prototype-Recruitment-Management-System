@@ -83,9 +83,9 @@ INSERT INTO application_status (status_name) VALUES
 
 -- Insert job applications
 INSERT INTO job_applications (job_id, appl_id, applied_time, status_id) VALUES 
-(1, 1, '2025-06-20', 1),
-(2, 2, '2025-06-21', 2),
-(3, 3, '2025-06-22', 1);
+(1, 1, '2025-06-20 12:00:00', 1),
+(2, 2, '2025-06-21 12:00:00', 2),
+(3, 3, '2025-06-22 12:00:00', 1);
 
 -- Insert followups
 INSERT INTO followups (admin_id, job_application_id) VALUES

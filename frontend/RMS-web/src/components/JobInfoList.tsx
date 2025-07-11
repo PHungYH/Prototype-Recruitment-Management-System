@@ -92,6 +92,7 @@ const JobList: React.FC<JobListProps> = ({ jobs, currentPage, totalPage, current
       <div className='border-l-4 border-gray-200 pl-4 my-4'>
         <h1 className='text-3xl'>{currentJob?.jobTitle}</h1>
         <Divider/>
+        <h2>Posted on: {currentJob?.jobPostedDate}</h2>
         <h2>Mode: {currentJob?.belongingEmploymentType?.name}</h2>
         <h2>Department: {currentJob?.belongingDepartment?.name}</h2>
         <h2>Description: {currentJob?.jobDescription}</h2>

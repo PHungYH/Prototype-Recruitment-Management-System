@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.peterhung.hk.demo.rms.rms.model.JobOpening;
 
 public interface JobOpeningRepository extends JpaRepository<JobOpening, Integer> {
-	Page<JobOpening> findByIsActive(Pageable pageable, boolean isActive);
+	Page<JobOpening> findByIsActiveOrderByIdDesc(Pageable pageable, boolean isActive);
 }

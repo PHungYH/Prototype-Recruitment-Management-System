@@ -1,7 +1,7 @@
 package com.peterhung.hk.demo.rms.rms.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "job_applications")
@@ -20,8 +20,14 @@ public class JobApplication {
     @JoinColumn(name = "appl_id", nullable = false)
     private Applicant applicant;
 
+    @Column(name = "interview_time")
+    private LocalDateTime interviewTime;
+
+    @Column(name = "interview_location")
+    private String interviewLocation;
+
     @Column(name = "applied_time", nullable = false)
-    private LocalDate appliedTime;
+    private LocalDateTime appliedTime;
 
     @ManyToOne
     @JoinColumn(name = "status_id", nullable = false)
@@ -50,12 +56,28 @@ public class JobApplication {
     public void setApplicant(Applicant applicant) {
         this.applicant = applicant;
     }
+    
+    public LocalDateTime getInterviewTime() {
+        return interviewTime;
+    }
 
-    public LocalDate getAppliedTime() {
+    public void setInterviewTime(LocalDateTime interviewTime) {
+        this.interviewTime = interviewTime;
+    }
+
+    public String getInterviewLocation() {
+        return interviewLocation;
+    }
+
+    public void setInterviewLocation(String interviewLocation) {
+        this.interviewLocation = interviewLocation;
+    }
+
+    public LocalDateTime getAppliedTime() {
         return appliedTime;
     }
 
-    public void setAppliedTime(LocalDate appliedTime) {
+    public void setAppliedTime(LocalDateTime appliedTime) {
         this.appliedTime = appliedTime;
     }
 

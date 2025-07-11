@@ -34,23 +34,23 @@ const Home:React.FC<HomeProps> = ({loginMode}) => {
 
   const loadPage = (page: number) => {
     hasFetchedJobList.current = true;
-      HTTPHelper.call<JobListResponse>(
-        `${appGlobal.endpoint_job}/getActiveJobs?page=${page}`,
-        'GET'
-      ).then((response) => {
-        console.log(response);
-        setCurrentPage(response.page.number);
-        setTotalPage(response.page.totalPages);
+    HTTPHelper.call<JobListResponse>(
+      `${appGlobal.endpoint_job}/getActiveJobs?page=${page}`,
+      'GET'
+    ).then((response) => {
+      console.log(response);
+      setCurrentPage(response.page.number);
+      setTotalPage(response.page.totalPages);
 
-        // fill in job info cards
-        const tmpJobInfo = [] as Job[];
-        response.content.forEach(job => {
-          tmpJobInfo.push(job);
-        });
-        setJobInfoData(tmpJobInfo);
-      }).catch((error) => {
-        console.error("Error fetching data:", error);
+      // fill in job info cards
+      const tmpJobInfo = [] as Job[];
+      response.content.forEach(job => {
+        tmpJobInfo.push(job);
       });
+      setJobInfoData(tmpJobInfo);
+    }).catch((error) => {
+      console.error("Error fetching data:", error);
+    });
   }
 
   useEffect(() => {

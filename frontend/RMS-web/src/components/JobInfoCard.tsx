@@ -14,6 +14,9 @@ const JobInfoCard: React.FC<JobInfoCardProps> = ({ job, onClick, isSelected }) =
       className={`max-w-md mx-auto bg-white border rounded-lg shadow-md p-6 space-y-4 cursor-pointer transition-all ${
         isSelected ? 'border-blue-500 ring-2 ring-blue-300' : 'border-gray-200'
       }`} onClick={()=>onClick(job)}>
+      <div>
+        <p className='text-gray-400'>{job.jobPostedDate}</p>  
+      </div>
       <div className="flex justify-between items-start">
         <UnderlineLink className="text-lg font-semibold text-gray-800" onClickHandler={() => {}} >{job.jobTitle}</UnderlineLink>
       </div>

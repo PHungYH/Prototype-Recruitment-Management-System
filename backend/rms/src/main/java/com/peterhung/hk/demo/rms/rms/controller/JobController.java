@@ -2,14 +2,12 @@ package com.peterhung.hk.demo.rms.rms.controller;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.web.PagedModel;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.peterhung.hk.demo.rms.rms.annotations.RequireApplicantToken;
-import com.peterhung.hk.demo.rms.rms.dto.request.ApplicationRequest;
-import com.peterhung.hk.demo.rms.rms.dto.response.SimpleBooleanResponse;
-import com.peterhung.hk.demo.rms.rms.dto.response.SimpleErrorResponse;
+import com.peterhung.hk.demo.rms.rms.dto.request.*;
+import com.peterhung.hk.demo.rms.rms.dto.response.*;
 import com.peterhung.hk.demo.rms.rms.exceptions.InvalidJobApplicationException;
 import com.peterhung.hk.demo.rms.rms.model.*;
 import com.peterhung.hk.demo.rms.rms.securityUtils.JwtUtils;
@@ -44,4 +42,15 @@ public class JobController {
 		
 		return ResponseEntity.ok(new SimpleBooleanResponse(true));
     }
+
+	@GetMapping("/getAppliedJobs")
+	@RequireApplicantToken
+	public ResponseEntity<?> getAppliedJobs(@RequestHeader String token) {
+		String[] usernameType = jwtUtils.getUsernameTypeFromToken(token);
+		JobApplication[] applications = jobService.getApplicationsByApplicant(usernameType[0]);
+		if (applications == null || applications.length == 0) {
+			return ResponseEntity.ok(new JobApplicationsResponse(false, new JobApplication[0]));
+		}
+		return ResponseEntity.ok(new JobApplicationsResponse(true, applications));
+	}
 }

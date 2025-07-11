@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.batch.BatchProperties.Job;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
@@ -34,11 +35,15 @@ public class JobService {
 
 	public Page<JobOpening> getPaginatedActiveJobOpenings(int page) {
 		Pageable pageable = PageRequest.of(page, 10);
-		return jobOpeningRepository.findByIsActive(pageable, true);
+		return jobOpeningRepository.findByIsActiveOrderByIdDesc(pageable, true);
+	}
+
+	public boolean checkJobApplicationExists(String applicantUsername, int jobId) {
+		return jobApplicationRepository.existsByApplicantUsernameAndJobOpeningId(applicantUsername, jobId);
 	}
 
 	public boolean addApplication(String applicantUsername, int jobId) throws InvalidJobApplicationException{
-		if (jobApplicationRepository.existsByApplicantUsernameAndJobOpeningId(applicantUsername, jobId)) {
+		if (checkJobApplicationExists(applicantUsername, jobId)) {
 			lastErrorCode = 1;
 			throw new InvalidJobApplicationException(errorMessages.get(1));
 		}
@@ -63,11 +68,15 @@ public class JobService {
 		JobApplication application = new JobApplication();
 		application.setJobOpening(jobOpening.get());
 		application.setApplicant(applicant);
-		application.setAppliedTime(java.time.LocalDate.now());
+		application.setAppliedTime(java.time.LocalDateTime.now());
 		application.setStatus(applicationStatusRepository.findById(1).get());
 		jobApplicationRepository.save(application);
 
 		return true;
+	}
+
+	public JobApplication[] getApplicationsByApplicant(String applicantUsername) {
+		return jobApplicationRepository.findByApplicantUsername(applicantUsername);
 	}
 
 	public int getLastErrorCode() {
