@@ -1,7 +1,5 @@
 import React from 'react';
-import UnderlineLink from './UnderlineLink';
 import type { JobApplication } from '../commonInterface/AppHistoryResponse.interface';
-import { Divider } from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
