@@ -78,6 +78,17 @@ public class JobService {
 		return jobApplicationRepository.findByApplicantUsername(applicantUsername);
 	}
 
+	public boolean deleteJobOpening(int jobId) throws InvalidJobApplicationException {
+		Optional<JobOpening> jobOpening = jobOpeningRepository.findById(jobId);
+		if (jobOpening.isEmpty()) {
+			lastErrorCode = 2;
+			throw new InvalidJobApplicationException(errorMessages.get(2));
+		}
+
+		jobOpeningRepository.delete(jobOpening.get());
+		return true;
+	}
+
 	public int getLastErrorCode() {
 		return lastErrorCode;
 	}

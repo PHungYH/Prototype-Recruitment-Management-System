@@ -5,6 +5,7 @@ import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.peterhung.hk.demo.rms.rms.annotations.RequireAdminToken;
 import com.peterhung.hk.demo.rms.rms.annotations.RequireApplicantToken;
 import com.peterhung.hk.demo.rms.rms.dto.request.*;
 import com.peterhung.hk.demo.rms.rms.dto.response.*;
@@ -32,7 +33,7 @@ public class JobController {
 
 	@PostMapping("/applyJob")
     @RequireApplicantToken
-    public ResponseEntity<?> applyJob(@RequestHeader String token, @RequestBody ApplicationRequest request) {
+    public ResponseEntity<?> applyJob(@RequestHeader String token, @RequestBody JobOpeningRequest request) {
         String[] usernameType = jwtUtils.getUsernameTypeFromToken(token);
         try {
 			jobService.addApplication(usernameType[0], request.getJobId());
@@ -52,5 +53,17 @@ public class JobController {
 			return ResponseEntity.ok(new JobApplicationsResponse(false, new JobApplication[0]));
 		}
 		return ResponseEntity.ok(new JobApplicationsResponse(true, applications));
+	}
+
+	@DeleteMapping("/deleteJob")
+	@RequireAdminToken
+	public ResponseEntity<?> deleteJob(@RequestHeader String token, @RequestBody JobOpeningRequest request) {
+		try {
+			jobService.deleteJobOpening(request.getJobId());
+		} catch (InvalidJobApplicationException e) {
+			return ResponseEntity.ok(new SimpleErrorResponse(jobService.getLastErrorCode(), jobService.getLastErrorMessage()));
+		}
+		
+		return ResponseEntity.ok(new SimpleBooleanResponse(true));
 	}
 }

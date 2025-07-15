@@ -1,13 +1,13 @@
 package com.peterhung.hk.demo.rms.rms.dto.request;
 
-public class ApplicationRequest {
+public class JobOpeningRequest {
 	private int jobId;
 	
-	public ApplicationRequest() {
+	public JobOpeningRequest() {
 
 	}
 
-	public ApplicationRequest(int jobId) {
+	public JobOpeningRequest(int jobId) {
 		this.jobId = jobId;
 	}
 
