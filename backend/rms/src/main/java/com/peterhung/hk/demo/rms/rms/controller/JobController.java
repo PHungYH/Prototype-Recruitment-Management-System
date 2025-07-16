@@ -55,11 +55,11 @@ public class JobController {
 		return ResponseEntity.ok(new JobApplicationsResponse(true, applications));
 	}
 
-	@DeleteMapping("/deleteJob")
+	@PostMapping("/deactivateJob")
 	@RequireAdminToken
-	public ResponseEntity<?> deleteJob(@RequestHeader String token, @RequestBody JobOpeningRequest request) {
+	public ResponseEntity<?> deactivateJob(@RequestHeader String token, @RequestBody JobOpeningRequest request) {
 		try {
-			jobService.deleteJobOpening(request.getJobId());
+			jobService.deactivateJobOpening(request.getJobId());
 		} catch (InvalidJobApplicationException e) {
 			return ResponseEntity.ok(new SimpleErrorResponse(jobService.getLastErrorCode(), jobService.getLastErrorMessage()));
 		}

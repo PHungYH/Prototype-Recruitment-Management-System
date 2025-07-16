@@ -8,6 +8,13 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
+import { HTTPHelper } from '../utils/HTTPHelper';
+
+interface MarkInactiveResponse {
+  result: boolean,
+  errorCode?: string,
+  message?: string;
+}
 
 interface JobInfoCardProps {
   job: Job
@@ -17,9 +24,22 @@ interface JobInfoCardProps {
 }
 
 const JobInfoCard: React.FC<JobInfoCardProps> = ({ job, onClick, isSelected, currentUserType }) => {
-  const [showConfirmDelete, setShowConfirmDelete] = React.useState(false);
-  const handleDelete = (job:Job) => {
-    setShowConfirmDelete(false);
+  const [showConfirmMarkInactive, setShowConfirmMarkInactive] = React.useState(false);
+  const handleMarkInactive = async(job:Job) => {
+    setShowConfirmMarkInactive(false);
+    const response = await HTTPHelper.call<MarkInactiveResponse>(
+      `${appGlobal.endpoint_job}/deactivateJob`,
+      'POST',
+      { jobId: job.id }
+    );
+    
+    console.log(response);
+    if (response.result) {
+      alert("Job successfully marked inactive.");
+      window.location.reload();
+    } else {
+      alert("Failed to mark inactive for the job: \nReason: " + response.message);
+    }
   }
 
   return (
@@ -35,7 +55,7 @@ const JobInfoCard: React.FC<JobInfoCardProps> = ({ job, onClick, isSelected, cur
           {currentUserType === appGlobal.userType_ADMIN && (
             <>
               <Button variant='text' onClick={() => onClick(job)}>✏️</Button>
-              <Button variant='text' onClick={() => setShowConfirmDelete(true)}>🗑️</Button>
+              <Button variant='text' onClick={() => setShowConfirmMarkInactive(true)}>📩</Button>
             </>
           )}
         </div>
@@ -56,8 +76,8 @@ const JobInfoCard: React.FC<JobInfoCardProps> = ({ job, onClick, isSelected, cur
       </div>
 
       <Dialog
-        open={showConfirmDelete}
-        onClose={() => setShowConfirmDelete(false)}
+        open={showConfirmMarkInactive}
+        onClose={() => setShowConfirmMarkInactive(false)}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
         closeAfterTransition={false}
@@ -67,12 +87,12 @@ const JobInfoCard: React.FC<JobInfoCardProps> = ({ job, onClick, isSelected, cur
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            <strong>Are you sure you want to delete this job posting?</strong>
+            <strong>Are you sure you want to deactivate this job posting?</strong>
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => handleDelete(job)}>Yes</Button>
-          <Button onClick={() => setShowConfirmDelete(false)}>No</Button>
+          <Button onClick={() => handleMarkInactive(job)}>Yes</Button>
+          <Button onClick={() => setShowConfirmMarkInactive(false)}>No</Button>
         </DialogActions>
       </Dialog>
     </div>

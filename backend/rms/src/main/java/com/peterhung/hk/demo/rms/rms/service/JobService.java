@@ -78,14 +78,22 @@ public class JobService {
 		return jobApplicationRepository.findByApplicantUsername(applicantUsername);
 	}
 
-	public boolean deleteJobOpening(int jobId) throws InvalidJobApplicationException {
+	public boolean deactivateJobOpening(int jobId) throws InvalidJobApplicationException {
 		Optional<JobOpening> jobOpening = jobOpeningRepository.findById(jobId);
 		if (jobOpening.isEmpty()) {
 			lastErrorCode = 2;
 			throw new InvalidJobApplicationException(errorMessages.get(2));
 		}
+		// Update application status for all applications related to this job opening
+		JobApplication[] applications = jobApplicationRepository.findByJobOpeningId(jobId);
+		for (JobApplication application : applications) {
+			application.setStatus(applicationStatusRepository.findByName("Closed"));
+			jobApplicationRepository.save(application);
+		}
 
-		jobOpeningRepository.delete(jobOpening.get());
+		// Deactivate the job opening
+		jobOpening.get().setActive(false);
+		jobOpeningRepository.save(jobOpening.get());
 		return true;
 	}
 
