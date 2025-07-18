@@ -2,9 +2,9 @@
 
 ## Setups
 - Prepare a **MySQL server**, port set to **3306**
+- Create table ```platformrecruit```, run ```import.sql```, then ```testdata.sql```
 - Free up ports **8008** and **8009** for the **Spring backend**
 - Free up port **5173** for the **web platform**
-
 ---
 
 ## Milestones
