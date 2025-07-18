@@ -13,6 +13,11 @@ import com.peterhung.hk.demo.rms.rms.exceptions.InvalidJobApplicationException;
 import com.peterhung.hk.demo.rms.rms.model.*;
 import com.peterhung.hk.demo.rms.rms.securityUtils.JwtUtils;
 import com.peterhung.hk.demo.rms.rms.service.JobService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.*;
+
 
 @RestController
 @RequestMapping("/api/job")
@@ -29,6 +34,13 @@ public class JobController {
 	public PagedModel<JobOpening> getActiveJobs(@RequestParam(defaultValue = "0") int page) {
 		Page<JobOpening> resPage = jobService.getPaginatedActiveJobOpenings(page);
 		return new PagedModel<>(resPage);
+	}
+
+	@PostMapping("/updateJob")
+	@RequireAdminToken
+	public ResponseEntity<?> updateJob(@RequestBody JobOpeningUpdateRequest request) {
+		jobService.updateJobOpening(request);
+		return ResponseEntity.ok("");
 	}
 
 	@PostMapping("/applyJob")
@@ -65,5 +77,19 @@ public class JobController {
 		}
 		
 		return ResponseEntity.ok(new SimpleBooleanResponse(true));
+	}
+
+	@GetMapping("/getAvailableEmploymentTypes")
+	@RequireAdminToken
+	public ResponseEntity<?> getAvailableEmploymentTypes() {
+		List<EmploymentType> employmentTypes = jobService.getAvailableEmploymentTypes();
+		return ResponseEntity.ok(new EmploymentTypesResponse(employmentTypes));
+	}
+	
+	@GetMapping("/getAvailableDepartments")
+	@RequireAdminToken
+	public ResponseEntity<?> getAvailableDepartments() {
+		List<Department> employmentTypes = jobService.getAvailableDepartments();
+		return ResponseEntity.ok(new DepartmentsResponse(employmentTypes));
 	}
 }

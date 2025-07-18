@@ -1,14 +1,11 @@
-import React from 'react';
+import { useState } from 'react';
 import UnderlineLink from './UnderlineLink';
 import type { Job } from '../commonInterface/JobListResponse.interface';
 import Button from '@mui/material/Button';
 import appGlobal from '../utils/AppGlobal';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogActions from '@mui/material/DialogActions';
 import { HTTPHelper } from '../utils/HTTPHelper';
+import JobOpeningEditFormDialog from './JobOpeningEditFormDialog';
+import DeleteConfirmationDialog from './DeleteConfirmationDialog';
 
 interface MarkInactiveResponse {
   result: boolean,
@@ -24,8 +21,10 @@ interface JobInfoCardProps {
 }
 
 const JobInfoCard: React.FC<JobInfoCardProps> = ({ job, onClick, isSelected, currentUserType }) => {
-  const [showConfirmMarkInactive, setShowConfirmMarkInactive] = React.useState(false);
-  const handleMarkInactive = async(job:Job) => {
+  const [showConfirmMarkInactive, setShowConfirmMarkInactive] = useState(false);
+  const [showEditJobOpening, setShowEditJobOpening] = useState(false);
+
+  const handleMarkInactive = async() => {
     setShowConfirmMarkInactive(false);
     const response = await HTTPHelper.call<MarkInactiveResponse>(
       `${appGlobal.endpoint_job}/deactivateJob`,
@@ -54,7 +53,7 @@ const JobInfoCard: React.FC<JobInfoCardProps> = ({ job, onClick, isSelected, cur
         <div className='grow flex flex-row justify-end'>
           {currentUserType === appGlobal.userType_ADMIN && (
             <>
-              <Button variant='text' onClick={() => onClick(job)}>✏️</Button>
+              <Button variant='text' onClick={() => setShowEditJobOpening(true)}>✏️</Button>
               <Button variant='text' onClick={() => setShowConfirmMarkInactive(true)}>📩</Button>
             </>
           )}
@@ -75,26 +74,9 @@ const JobInfoCard: React.FC<JobInfoCardProps> = ({ job, onClick, isSelected, cur
         </span>
       </div>
 
-      <Dialog
-        open={showConfirmMarkInactive}
-        onClose={() => setShowConfirmMarkInactive(false)}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-        closeAfterTransition={false}
-      >
-        <DialogTitle id="alert-dialog-title">
-          Deletion
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            <strong>Are you sure you want to deactivate this job posting?</strong>
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => handleMarkInactive(job)}>Yes</Button>
-          <Button onClick={() => setShowConfirmMarkInactive(false)}>No</Button>
-        </DialogActions>
-      </Dialog>
+      <DeleteConfirmationDialog getShow={showConfirmMarkInactive} setShow={setShowConfirmMarkInactive} promiseCallbackOnYes={handleMarkInactive}/>
+      <JobOpeningEditFormDialog getShow={showEditJobOpening} setShow={setShowEditJobOpening} job={job}/>
+
     </div>
   );
 };

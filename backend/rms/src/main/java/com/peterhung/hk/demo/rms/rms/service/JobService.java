@@ -1,20 +1,26 @@
 package com.peterhung.hk.demo.rms.rms.service;
 
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
+import com.peterhung.hk.demo.rms.rms.dto.request.JobOpeningUpdateRequest;
 import com.peterhung.hk.demo.rms.rms.exceptions.InvalidJobApplicationException;
 import com.peterhung.hk.demo.rms.rms.model.Applicant;
+import com.peterhung.hk.demo.rms.rms.model.Department;
+import com.peterhung.hk.demo.rms.rms.model.EmploymentType;
 import com.peterhung.hk.demo.rms.rms.model.JobApplication;
 import com.peterhung.hk.demo.rms.rms.model.JobOpening;
 import com.peterhung.hk.demo.rms.rms.repository.*;
 
 @Service
 public class JobService {
+	@Autowired
+	private EmploymentTypeRepository employmentTypeRepository;
+	@Autowired
+	private DepartmentRepository departmentRepository;
 	@Autowired
 	private JobOpeningRepository jobOpeningRepository;
 	@Autowired
@@ -78,6 +84,11 @@ public class JobService {
 		return jobApplicationRepository.findByApplicantUsername(applicantUsername);
 	}
 
+	public boolean updateJobOpening(JobOpeningUpdateRequest jobOpeningUpdateRequest) {
+		
+		return true;
+	}
+
 	public boolean deactivateJobOpening(int jobId) throws InvalidJobApplicationException {
 		Optional<JobOpening> jobOpening = jobOpeningRepository.findById(jobId);
 		if (jobOpening.isEmpty()) {
@@ -103,5 +114,13 @@ public class JobService {
 
 	public String getLastErrorMessage() {
 		return errorMessages.get(lastErrorCode);
+	}
+
+	public List<EmploymentType> getAvailableEmploymentTypes() {
+		return employmentTypeRepository.findAll();
+	}
+
+	public List<Department> getAvailableDepartments() {
+		return departmentRepository.findAll();
 	}
 }
