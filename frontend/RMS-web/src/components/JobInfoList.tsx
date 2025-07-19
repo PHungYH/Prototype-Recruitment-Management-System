@@ -72,6 +72,7 @@ const JobList: React.FC<JobListProps> = ({ jobs, currentPage, totalPage, current
               job={job}
               onClick={() => handleJob(job)}
               isSelected={currentJob.id === job.id}
+              currentUserType={currentUserType}
             />
           ))}
 

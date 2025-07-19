@@ -79,7 +79,8 @@ INSERT INTO application_status (status_name) VALUES
 ('Applied'),
 ('Reviewing'),
 ('Offered'),
-('Rejected');
+('Rejected'),
+('Closed');
 
 -- Insert job applications
 INSERT INTO job_applications (job_id, appl_id, applied_time, status_id) VALUES 

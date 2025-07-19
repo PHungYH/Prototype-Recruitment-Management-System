@@ -47,7 +47,7 @@ public class UserAspect {
 
      @Around("@annotation(com.peterhung.hk.demo.rms.rms.annotations.RequireAdminToken)")
     public Object validateAdmin(ProceedingJoinPoint joinPoint) throws Throwable {
-        logger.info("[Aspect] Validate applicant token...");
+        logger.info("[Aspect] Validate admin token...");
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (attributes == null) {
             logger.error("[Aspect] No request attributes found.");

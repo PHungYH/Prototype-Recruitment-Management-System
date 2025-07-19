@@ -22,7 +22,7 @@ const AppHistoryInfoCard: React.FC<AppHistoryInfoCardProps> = ({ appHistory }) =
           <h1 className='text-2xl font-bold'>{appHistory?.jobOpening?.jobTitle}</h1>
         </div>
         <div className='w-1/2'>
-          <span className="inline-block bg-blue-600 text-white text-xs font-semibold px-4 py-1 rounded-full">
+          <span className={`inline-block bg-${appHistory.status.name == 'Closed'?'gray-500' :'blue-600'} text-white text-xs font-semibold px-4 py-1 rounded-full`}>
           {appHistory.status.name}
         </span>
           <p className='text-gray-600'>Mode: {appHistory?.jobOpening?.belongingEmploymentType?.name}</p>
