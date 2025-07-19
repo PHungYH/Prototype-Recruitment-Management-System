@@ -27,6 +27,7 @@ const JobList: React.FC<JobListProps> = ({ jobs, currentPage, totalPage, current
   const [showApplicantTable, setShowApplicantTable] = useState(false);
 
   const handleJob = (job: Job): void => {
+    setShowApplicantTable(false);
     setCurrentJob(job);
   }
 
@@ -77,10 +78,7 @@ const JobList: React.FC<JobListProps> = ({ jobs, currentPage, totalPage, current
             <JobInfoCard
               key={index}
               job={job}
-              onClick={() => {
-                handleJob(job); 
-                setShowApplicantTable(false);
-              }}
+              onClick={() => handleJob(job)}
               isSelected={currentJob.id === job.id}
               currentUserType={currentUserType}
             />
