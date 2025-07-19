@@ -28,6 +28,12 @@ interface DepartmentsResponse {
   departments:Department[]
 }
 
+interface UpdateResponse {
+  result:boolean
+  errorCode?:number
+  message?:string
+}
+
 type JobOpeningEditFormProps = {
     job:Job,
     getShow:boolean,
@@ -64,9 +70,31 @@ const JobOpeningEditFormDialog:React.FC<JobOpeningEditFormProps> = ({job, getSho
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const formJson = Object.fromEntries((formData as any).entries());
-    const email = formJson.email;
-    console.log(email);
-    setShow(false);
+    console.log(formJson);
+
+    HTTPHelper.call<UpdateResponse>(
+      `${appGlobal.endpoint_job}/updateJob`,
+      'POST',
+      {
+        jobId: job.id,
+        title: formJson?.title,
+        employmentTypeId: formJson?.employmentTypeId,
+        departmentId: formJson?.departmentId,
+        description: formJson?.description,
+        requirement: formJson?.requirement
+      }
+    ).then((response) => {
+      if (response.result) {
+        alert("Update success.")
+        window.location.reload();
+      } else {
+        alert("Failed to update. Reason: " + response.message);
+      }
+    }).catch((error) => {
+      console.error("Error fetching data:", error);
+      alert("Failed to update.")
+    });
+    
   };
 
   return (
@@ -89,7 +117,7 @@ const JobOpeningEditFormDialog:React.FC<JobOpeningEditFormProps> = ({job, getSho
             />
 
             <InputLabel id="employment-type-label" required>Employment Type</InputLabel>
-            <Select defaultValue={job.belongingEmploymentType.id}>
+            <Select defaultValue={job.belongingEmploymentType.id} name='employmentTypeId'>
               {employmentTypes.length == 0 && <MenuItem value={job.belongingEmploymentType.id}>...</MenuItem>}
               {employmentTypes.map((empType) => (
                 <MenuItem value={empType.id}>{empType.name}</MenuItem>
@@ -97,7 +125,7 @@ const JobOpeningEditFormDialog:React.FC<JobOpeningEditFormProps> = ({job, getSho
             </Select>
 
             <InputLabel id="department-type-label" required>Department Type</InputLabel>
-            <Select defaultValue={job.belongingDepartment.id}>
+            <Select defaultValue={job.belongingDepartment.id} name='departmentId'>
               {departments.length == 0 && <MenuItem value={job.belongingDepartment.id}>...</MenuItem>}
               {departments.map((dept) => (
                 <MenuItem value={dept.id}>{dept.name}</MenuItem>
@@ -110,6 +138,7 @@ const JobOpeningEditFormDialog:React.FC<JobOpeningEditFormProps> = ({job, getSho
               style={{ width: '100%', border:'solid', borderWidth: 'thin' }}
               minRows={3}
               defaultValue={job.jobDescription}
+              name='description'
             />
 
             <InputLabel id="requirements-label" required>Requirements</InputLabel>
@@ -118,6 +147,7 @@ const JobOpeningEditFormDialog:React.FC<JobOpeningEditFormProps> = ({job, getSho
               style={{ width: '100%', border:'solid', borderWidth: 'thin' }}
               minRows={3}
               defaultValue={job.jobRequirement}
+              name='requirement'
             />
 
             <DialogActions>

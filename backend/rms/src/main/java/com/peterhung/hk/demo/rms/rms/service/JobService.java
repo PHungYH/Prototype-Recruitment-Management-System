@@ -35,7 +35,8 @@ public class JobService {
             1, "Already applied for this job",
 			2, "Job opening not found",
 			3, "The job post has been closed",
-			4, "Applicant not found"
+			4, "Applicant not found",
+			5, "Missing data"
 	);
 
 	public Page<JobOpening> getPaginatedActiveJobOpenings(int page) {
@@ -85,7 +86,41 @@ public class JobService {
 	}
 
 	public boolean updateJobOpening(JobOpeningUpdateRequest jobOpeningUpdateRequest) {
-		
+		// Validations
+		Optional<JobOpening> jobOpening = jobOpeningRepository.findById(jobOpeningUpdateRequest.getJobId());
+		if (jobOpening.isEmpty()) {
+			lastErrorCode = 2;
+			return false;
+		}
+
+		if (jobOpeningUpdateRequest.getTitle().isEmpty()
+			|| jobOpeningUpdateRequest.getDescription().isEmpty()
+			|| jobOpeningUpdateRequest.getRequirement().isEmpty()) {
+			lastErrorCode = 5;
+			return false;
+		}
+
+		Optional<EmploymentType> newEmpType = employmentTypeRepository.findById(jobOpeningUpdateRequest.getEmploymentTypeId());
+		if (newEmpType.isEmpty()) {
+			lastErrorCode = 5;
+			return false;
+		}
+
+		Optional<Department> newDept = departmentRepository.findById(jobOpeningUpdateRequest.getDepartmentId());
+		if (newDept.isEmpty()) {
+			lastErrorCode = 5;
+			return false;
+		}
+
+		// Update
+		JobOpening opening = jobOpening.get(); 
+		opening.setJobTitle(jobOpeningUpdateRequest.getTitle());
+		opening.setBelongingEmploymentType(newEmpType.get());
+		opening.setBelongingDepartment(newDept.get());
+		opening.setJobDescription(jobOpeningUpdateRequest.getDescription());
+		opening.setJobRequirement(jobOpeningUpdateRequest.getRequirement());
+
+		jobOpeningRepository.save(opening);
 		return true;
 	}
 

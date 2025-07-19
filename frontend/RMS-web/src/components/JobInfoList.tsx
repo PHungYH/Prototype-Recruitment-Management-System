@@ -96,8 +96,12 @@ const JobList: React.FC<JobListProps> = ({ jobs, currentPage, totalPage, current
         <h2>Posted on: {currentJob?.jobPostedDate}</h2>
         <h2>Mode: {currentJob?.belongingEmploymentType?.name}</h2>
         <h2>Department: {currentJob?.belongingDepartment?.name}</h2>
-        <h2>Description: {currentJob?.jobDescription}</h2>
-        <h2>Requirements: {currentJob.jobRequirement}</h2>
+        <h2>Description:<br></br>{currentJob?.jobDescription?.split('\n').map((line, index) => (
+          <a key={index}>{line}<br></br></a>
+        ))}</h2>
+        <h2 className='mt-5'>Requirements:<br></br> {currentJob.jobRequirement?.split('\n').map((line, index) => (
+          <a key={index}>{line}<br></br></a>
+        ))}</h2>
         <Divider/>
         {currentUserType === '' && <UnderlineLink className="text-green-700" href="/login">Login to apply</UnderlineLink>}
         {currentUserType === appGlobal.userType_APPLICANT && 

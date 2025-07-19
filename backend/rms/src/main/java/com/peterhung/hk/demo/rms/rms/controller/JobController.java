@@ -39,8 +39,11 @@ public class JobController {
 	@PostMapping("/updateJob")
 	@RequireAdminToken
 	public ResponseEntity<?> updateJob(@RequestBody JobOpeningUpdateRequest request) {
-		jobService.updateJobOpening(request);
-		return ResponseEntity.ok("");
+		if (jobService.updateJobOpening(request)) {
+			return ResponseEntity.ok(new SimpleBooleanResponse(true));
+		} else {
+			return ResponseEntity.ok(new SimpleErrorResponse(jobService.getLastErrorCode(), jobService.getLastErrorMessage()));
+		}
 	}
 
 	@PostMapping("/applyJob")
