@@ -24,6 +24,7 @@ interface JobListProps {
 const JobList: React.FC<JobListProps> = ({ jobs, currentPage, totalPage, currentUserType, onPageChanged }) => {
   const [currentJob, setCurrentJob] = useState<Job>({} as Job);
   const [showAddJobOpening, setShowAddJobOpening] = useState(false);
+  const [showApplicantTable, setShowApplicantTable] = useState(false);
 
   const handleJob = (job: Job): void => {
     setCurrentJob(job);
@@ -76,7 +77,10 @@ const JobList: React.FC<JobListProps> = ({ jobs, currentPage, totalPage, current
             <JobInfoCard
               key={index}
               job={job}
-              onClick={() => handleJob(job)}
+              onClick={() => {
+                handleJob(job); 
+                setShowApplicantTable(false);
+              }}
               isSelected={currentJob.id === job.id}
               currentUserType={currentUserType}
             />
@@ -96,26 +100,35 @@ const JobList: React.FC<JobListProps> = ({ jobs, currentPage, totalPage, current
           </div>
         </div>
       </div>
-      <div className='border-l-4 border-gray-200 pl-4 my-4'>
-        <h1 className='text-3xl'>{currentJob?.jobTitle}</h1>
-        <Divider/>
-        <h2>Posted on: {currentJob?.jobPostedDate}</h2>
-        <h2>Mode: {currentJob?.belongingEmploymentType?.name}</h2>
-        <h2>Department: {currentJob?.belongingDepartment?.name}</h2>
-        <h2>Description:<br></br>{currentJob?.jobDescription?.split('\n').map((line, index) => (
-          <a key={index}>{line}<br></br></a>
-        ))}</h2>
-        <h2 className='mt-5'>Requirements:<br></br> {currentJob.jobRequirement?.split('\n').map((line, index) => (
-          <a key={index}>{line}<br></br></a>
-        ))}</h2>
-        <Divider/>
-        {currentUserType === '' && <UnderlineLink className="text-green-700" href="/login">Login to apply</UnderlineLink>}
-        {currentUserType === appGlobal.userType_APPLICANT && 
-        <Button variant='contained' 
-          color='primary' 
-          style={{marginTop: 4}} 
-          onClick={() => handleApply()}>Apply</Button>}
-      </div>
+      {showApplicantTable?  
+        <div className='border-l-4 border-gray-200 pl-4 my-4'>APPLICANT TABLE</div>
+        :
+        <div className='border-l-4 border-gray-200 pl-4 my-4'>
+          <h1 className='text-3xl'>{currentJob?.jobTitle}</h1>
+          <Divider />
+          <h2>Posted on: {currentJob?.jobPostedDate}</h2>
+          <h2>Mode: {currentJob?.belongingEmploymentType?.name}</h2>
+          <h2>Department: {currentJob?.belongingDepartment?.name}</h2>
+          <h2>Description:<br></br>{currentJob?.jobDescription?.split('\n').map((line, index) => (
+            <a key={index}>{line}<br></br></a>
+          ))}</h2>
+          <h2 className='mt-5'>Requirements:<br></br> {currentJob.jobRequirement?.split('\n').map((line, index) => (
+            <a key={index}>{line}<br></br></a>
+          ))}</h2>
+          <Divider />
+          {currentUserType === '' && <UnderlineLink className="text-green-700" href="/login">Login to apply</UnderlineLink>}
+          {currentUserType === appGlobal.userType_APPLICANT &&
+            <Button variant='contained'
+              color='primary'
+              style={{ marginTop: 4 }}
+              onClick={() => handleApply()}>Apply</Button>}
+          {currentUserType === appGlobal.userType_ADMIN &&
+            <Button variant='contained'
+              color='primary'
+              style={{ marginTop: 4 }}
+              onClick={() => setShowApplicantTable(true)}>Show Applicants</Button>}
+        </div>
+      }
     </div>
   );
 };
