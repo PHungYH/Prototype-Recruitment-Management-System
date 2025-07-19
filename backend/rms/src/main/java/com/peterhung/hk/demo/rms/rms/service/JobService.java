@@ -1,12 +1,13 @@
 package com.peterhung.hk.demo.rms.rms.service;
 
+import java.time.LocalDate;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
-import com.peterhung.hk.demo.rms.rms.dto.request.JobOpeningUpdateRequest;
+import com.peterhung.hk.demo.rms.rms.dto.request.JobOpeningAddUpdateRequest;
 import com.peterhung.hk.demo.rms.rms.exceptions.InvalidJobApplicationException;
 import com.peterhung.hk.demo.rms.rms.model.Applicant;
 import com.peterhung.hk.demo.rms.rms.model.Department;
@@ -85,12 +86,17 @@ public class JobService {
 		return jobApplicationRepository.findByApplicantUsername(applicantUsername);
 	}
 
-	public boolean updateJobOpening(JobOpeningUpdateRequest jobOpeningUpdateRequest) {
+	// If job ID not provided, treat as ADD action
+	public boolean addUpdateJobOpening(JobOpeningAddUpdateRequest jobOpeningUpdateRequest) {
+		Optional<JobOpening> jobOpening = Optional.empty();
 		// Validations
-		Optional<JobOpening> jobOpening = jobOpeningRepository.findById(jobOpeningUpdateRequest.getJobId());
-		if (jobOpening.isEmpty()) {
-			lastErrorCode = 2;
-			return false;
+		if (jobOpeningUpdateRequest.getJobId() != 0) {
+			// Check for update
+			jobOpening = jobOpeningRepository.findById(jobOpeningUpdateRequest.getJobId());
+			if (jobOpening.isEmpty()) {
+				lastErrorCode = 2;
+				return false;
+			}
 		}
 
 		if (jobOpeningUpdateRequest.getTitle().isEmpty()
@@ -112,8 +118,14 @@ public class JobService {
 			return false;
 		}
 
-		// Update
-		JobOpening opening = jobOpening.get(); 
+		// Add/Update
+		JobOpening opening;
+		if (jobOpening.isEmpty()) {
+			opening = new JobOpening();
+			opening.setJobPostedDate(LocalDate.now());
+			opening.setActive(true);
+		} else
+			opening = jobOpening.get(); 
 		opening.setJobTitle(jobOpeningUpdateRequest.getTitle());
 		opening.setBelongingEmploymentType(newEmpType.get());
 		opening.setBelongingDepartment(newDept.get());

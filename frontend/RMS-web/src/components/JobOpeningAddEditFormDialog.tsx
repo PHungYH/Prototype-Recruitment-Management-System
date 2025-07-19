@@ -35,11 +35,11 @@ interface UpdateResponse {
 }
 
 type JobOpeningEditFormProps = {
-    job:Job,
+    job?:Job,
     getShow:boolean,
     setShow:React.Dispatch<React.SetStateAction<boolean>>;
 }
-const JobOpeningEditFormDialog:React.FC<JobOpeningEditFormProps> = ({job, getShow, setShow}) => {
+const JobOpeningAddEditFormDialog:React.FC<JobOpeningEditFormProps> = ({job, getShow, setShow}) => {
   const [employmentTypes, setEmploymentTypes] = useState<EmploymentType[]>([] as EmploymentType[]);
   const [departments, setDepartments] = useState<Department[]>([] as Department[]);
 
@@ -73,10 +73,10 @@ const JobOpeningEditFormDialog:React.FC<JobOpeningEditFormProps> = ({job, getSho
     console.log(formJson);
 
     HTTPHelper.call<UpdateResponse>(
-      `${appGlobal.endpoint_job}/updateJob`,
+      `${appGlobal.endpoint_job}/addUpdateJob`,
       'POST',
       {
-        jobId: job.id,
+        jobId: job?.id,
         title: formJson?.title,
         employmentTypeId: formJson?.employmentTypeId,
         departmentId: formJson?.departmentId,
@@ -100,7 +100,7 @@ const JobOpeningEditFormDialog:React.FC<JobOpeningEditFormProps> = ({job, getSho
   return (
     <Fragment>
       <Dialog open={getShow} onClose={()=>setShow(false)}>
-        <DialogTitle>✏️ Edit Job Opening</DialogTitle>
+        <DialogTitle>✏️ {job? 'Edit' : 'Add'} Job Opening</DialogTitle>
         <Divider/>
         <DialogContent sx={{ paddingBottom: 0, width:'30vw'}}>
           <form onSubmit={handleSubmit} >
@@ -113,20 +113,20 @@ const JobOpeningEditFormDialog:React.FC<JobOpeningEditFormProps> = ({job, getSho
               name="title"
               fullWidth
               variant="standard"
-              defaultValue={job.jobTitle}
+              defaultValue={job? job.jobTitle : ''}
             />
 
             <InputLabel id="employment-type-label" required>Employment Type</InputLabel>
-            <Select defaultValue={job.belongingEmploymentType.id} name='employmentTypeId'>
-              {employmentTypes.length == 0 && <MenuItem value={job.belongingEmploymentType.id}>...</MenuItem>}
+            <Select defaultValue={job? job.belongingEmploymentType.id : 1} name='employmentTypeId'>
+              {employmentTypes.length == 0 && <MenuItem value={job? job.belongingEmploymentType.id : 1}>...</MenuItem>}
               {employmentTypes.map((empType) => (
                 <MenuItem value={empType.id}>{empType.name}</MenuItem>
               ))}
             </Select>
 
             <InputLabel id="department-type-label" required>Department Type</InputLabel>
-            <Select defaultValue={job.belongingDepartment.id} name='departmentId'>
-              {departments.length == 0 && <MenuItem value={job.belongingDepartment.id}>...</MenuItem>}
+            <Select defaultValue={job? job.belongingDepartment.id : 1} name='departmentId'>
+              {departments.length == 0 && <MenuItem value={job? job.belongingDepartment.id : 1}>...</MenuItem>}
               {departments.map((dept) => (
                 <MenuItem value={dept.id}>{dept.name}</MenuItem>
               ))}
@@ -137,7 +137,7 @@ const JobOpeningEditFormDialog:React.FC<JobOpeningEditFormProps> = ({job, getSho
               required
               style={{ width: '100%', border:'solid', borderWidth: 'thin' }}
               minRows={3}
-              defaultValue={job.jobDescription}
+              defaultValue={job? job.jobDescription : ''}
               name='description'
             />
 
@@ -146,7 +146,7 @@ const JobOpeningEditFormDialog:React.FC<JobOpeningEditFormProps> = ({job, getSho
               required
               style={{ width: '100%', border:'solid', borderWidth: 'thin' }}
               minRows={3}
-              defaultValue={job.jobRequirement}
+              defaultValue={job? job.jobRequirement: ''}
               name='requirement'
             />
 
@@ -161,4 +161,4 @@ const JobOpeningEditFormDialog:React.FC<JobOpeningEditFormProps> = ({job, getSho
   );
 }
 
-export default JobOpeningEditFormDialog;
+export default JobOpeningAddEditFormDialog;

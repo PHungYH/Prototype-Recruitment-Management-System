@@ -4,7 +4,7 @@ import type { Job } from '../commonInterface/JobListResponse.interface';
 import Button from '@mui/material/Button';
 import appGlobal from '../utils/AppGlobal';
 import { HTTPHelper } from '../utils/HTTPHelper';
-import JobOpeningEditFormDialog from './JobOpeningEditFormDialog';
+import JobOpeningAddEditFormDialog from './JobOpeningAddEditFormDialog';
 import DeleteConfirmationDialog from './DeleteConfirmationDialog';
 
 interface MarkInactiveResponse {
@@ -46,6 +46,8 @@ const JobInfoCard: React.FC<JobInfoCardProps> = ({ job, onClick, isSelected, cur
       className={`max-w-md mx-auto bg-white border rounded-lg shadow-md p-6 space-y-4 cursor-pointer transition-all ${
         isSelected ? 'border-blue-500 ring-2 ring-blue-300' : 'border-gray-200'
       }`} onClick={()=>onClick(job)}>
+      <DeleteConfirmationDialog getShow={showConfirmMarkInactive} setShow={setShowConfirmMarkInactive} promiseCallbackOnYes={handleMarkInactive}/>
+      <JobOpeningAddEditFormDialog getShow={showEditJobOpening} setShow={setShowEditJobOpening} job={job}/>
       <div className='flex flex-row items-start'>
         <div className='w-48'>
           <p className='text-gray-400'>{job.jobPostedDate}</p>
@@ -73,10 +75,6 @@ const JobInfoCard: React.FC<JobInfoCardProps> = ({ job, onClick, isSelected, cur
           {job.belongingEmploymentType.name}
         </span>
       </div>
-
-      <DeleteConfirmationDialog getShow={showConfirmMarkInactive} setShow={setShowConfirmMarkInactive} promiseCallbackOnYes={handleMarkInactive}/>
-      <JobOpeningEditFormDialog getShow={showEditJobOpening} setShow={setShowEditJobOpening} job={job}/>
-
     </div>
   );
 };

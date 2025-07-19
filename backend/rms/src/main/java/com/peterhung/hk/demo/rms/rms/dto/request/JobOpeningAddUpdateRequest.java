@@ -1,6 +1,6 @@
 package com.peterhung.hk.demo.rms.rms.dto.request;
 
-public class JobOpeningUpdateRequest {
+public class JobOpeningAddUpdateRequest {
     private int jobId;
     private String title;
     private int employmentTypeId;

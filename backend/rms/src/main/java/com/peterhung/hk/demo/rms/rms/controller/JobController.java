@@ -36,10 +36,10 @@ public class JobController {
 		return new PagedModel<>(resPage);
 	}
 
-	@PostMapping("/updateJob")
+	@PostMapping("/addUpdateJob")
 	@RequireAdminToken
-	public ResponseEntity<?> updateJob(@RequestBody JobOpeningUpdateRequest request) {
-		if (jobService.updateJobOpening(request)) {
+	public ResponseEntity<?> addUpdateJob(@RequestBody JobOpeningAddUpdateRequest request) {
+		if (jobService.addUpdateJobOpening(request)) {
 			return ResponseEntity.ok(new SimpleBooleanResponse(true));
 		} else {
 			return ResponseEntity.ok(new SimpleErrorResponse(jobService.getLastErrorCode(), jobService.getLastErrorMessage()));

@@ -5,6 +5,7 @@ import { Button, Divider } from '@mui/material';
 import appGlobal from '../utils/AppGlobal';
 import { HTTPHelper } from '../utils/HTTPHelper';
 import UnderlineLink from './UnderlineLink';
+import JobOpeningAddEditFormDialog from './JobOpeningAddEditFormDialog';
 
 interface ApplyResponse {
   result: boolean,
@@ -22,6 +23,8 @@ interface JobListProps {
 
 const JobList: React.FC<JobListProps> = ({ jobs, currentPage, totalPage, currentUserType, onPageChanged }) => {
   const [currentJob, setCurrentJob] = useState<Job>({} as Job);
+  const [showAddJobOpening, setShowAddJobOpening] = useState(false);
+
   const handleJob = (job: Job): void => {
     setCurrentJob(job);
   }
@@ -51,19 +54,22 @@ const JobList: React.FC<JobListProps> = ({ jobs, currentPage, totalPage, current
 
   return (
     <div className='flex flex-col md:flex-row w-full h-full'>
+      {showAddJobOpening && <JobOpeningAddEditFormDialog getShow={showAddJobOpening} setShow={setShowAddJobOpening}/>}
       <div className="w-full md:w-1/3 h-full overflow-y-auto p-4">
         <div className="space-y-6">
           {/* Up pagination */}
-            <div className='flex flex-row justify-center'>
-            <Button variant='contained' style={{margin: 3}} onClick={() => onPageChanged(currentPage-1)} disabled={currentPage == 0}>{'<'} Prev</Button>
+          <div className='flex flex-row justify-center'>
+            <Button variant='contained' style={{ margin: 3 }} onClick={() => onPageChanged(currentPage - 1)} disabled={currentPage == 0}>{'<'} Prev</Button>
 
-            {currentPage - 1 > 0 && <Button variant='outlined' style={{margin: 3}} onClick={()=> onPageChanged(currentPage-2)}>{currentPage-1}</Button>}
-            {currentPage > 0 && <Button variant='outlined' style={{margin: 3}} onClick={()=> onPageChanged(currentPage-1)}>{currentPage}</Button>}
-            <Button variant='outlined' style={{margin: 3, textDecoration: 'underline'}}>{currentPage + 1}</Button>
-            
-            {currentPage < totalPage - 1 && <Button variant='outlined' style={{margin: 3}} onClick={() => onPageChanged(currentPage+1)}>{currentPage + 2}</Button>}
-            {currentPage + 1 < totalPage - 1 && <Button variant='outlined' style={{margin: 3}} onClick={() => onPageChanged(currentPage+2)}>{currentPage + 3}</Button>}
-            <Button variant='contained' style={{margin: 3}} onClick={() => onPageChanged(currentPage+1)} disabled={currentPage == totalPage - 1}>Next {'>'}</Button>
+            {currentPage - 1 > 0 && <Button variant='outlined' style={{ margin: 3 }} onClick={() => onPageChanged(currentPage - 2)}>{currentPage - 1}</Button>}
+            {currentPage > 0 && <Button variant='outlined' style={{ margin: 3 }} onClick={() => onPageChanged(currentPage - 1)}>{currentPage}</Button>}
+            <Button variant='outlined' style={{ margin: 3, textDecoration: 'underline' }}>{currentPage + 1}</Button>
+
+            {currentPage < totalPage - 1 && <Button variant='outlined' style={{ margin: 3 }} onClick={() => onPageChanged(currentPage + 1)}>{currentPage + 2}</Button>}
+            {currentPage + 1 < totalPage - 1 && <Button variant='outlined' style={{ margin: 3 }} onClick={() => onPageChanged(currentPage + 2)}>{currentPage + 3}</Button>}
+            <Button variant='contained' style={{ margin: 3 }} onClick={() => onPageChanged(currentPage + 1)} disabled={currentPage == totalPage - 1}>Next {'>'}</Button>
+
+            {currentUserType === appGlobal.userType_ADMIN && <Button variant='contained' style={{ margin: 3, background: 'green' }} onClick={() => setShowAddJobOpening(true)}>New</Button>}
           </div>
 
           {jobs.map((job, index) => (
