@@ -54,10 +54,14 @@ const AppHistoryInfoCard: React.FC<AppHistoryInfoCardProps> = ({ appHistory }) =
               <strong>Employment Type:</strong> {appHistory?.jobOpening?.belongingEmploymentType?.name}
           </DialogContentText>
           <DialogContentText>
-            <strong>Job Description:</strong> {appHistory?.jobOpening?.jobDescription}
+            <strong>Job Description:</strong><br></br> {appHistory?.jobOpening?.jobDescription?.split('\n').map((line, index) => (
+              <a key={index}>{line}<br></br></a>
+            ))}
           </DialogContentText>
           <DialogContentText>
-            <strong>Job Requirement:</strong> {appHistory?.jobOpening?.jobRequirement}
+            <strong>Job Requirement:</strong><br></br> {appHistory?.jobOpening?.jobRequirement?.split("\n").map((line, index) =>(
+              <a key={index}>{line}<br></br></a>
+            ))}
           </DialogContentText>
           <DialogContentText>
               <strong>Posted Date:</strong> {appHistory?.jobOpening?.jobPostedDate}
