@@ -6,6 +6,7 @@ import appGlobal from '../utils/AppGlobal';
 import { HTTPHelper } from '../utils/HTTPHelper';
 import UnderlineLink from './UnderlineLink';
 import JobOpeningAddEditFormDialog from './JobOpeningAddEditFormDialog';
+import ApplicantTable from './ApplicantTable';
 
 interface ApplyResponse {
   result: boolean,
@@ -99,7 +100,7 @@ const JobList: React.FC<JobListProps> = ({ jobs, currentPage, totalPage, current
         </div>
       </div>
       {showApplicantTable?  
-        <div className='border-l-4 border-gray-200 pl-4 my-4'>APPLICANT TABLE</div>
+        <div className='border-l-4 border-gray-200 pl-4 my-4'><ApplicantTable/></div>
         :
         <div className='border-l-4 border-gray-200 pl-4 my-4'>
           <h1 className='text-3xl'>{currentJob?.jobTitle}</h1>

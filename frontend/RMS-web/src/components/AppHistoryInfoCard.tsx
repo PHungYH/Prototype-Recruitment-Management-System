@@ -27,7 +27,7 @@ const AppHistoryInfoCard: React.FC<AppHistoryInfoCardProps> = ({ appHistory }) =
         </span>
           <p className='text-gray-600'>Mode: {appHistory?.jobOpening?.belongingEmploymentType?.name}</p>
           <p className='text-gray-600'>Interview Location: {appHistory.interviewLocation? appHistory.interviewLocation : "To be announced"}</p>
-          <p className='text-gray-600'>Interview Location: {appHistory.interviewTime? appHistory.interviewTime.replace("T", " ") : "To be announced"}</p>
+          <p className='text-gray-600'>Interview Time: {appHistory.interviewTime? appHistory.interviewTime.replace("T", " ") : "To be announced"}</p>
         </div>
       </div>
       <div className='flex flex-row items-center'>
