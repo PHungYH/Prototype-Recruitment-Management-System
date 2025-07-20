@@ -86,6 +86,10 @@ public class JobService {
 		return jobApplicationRepository.findByApplicantUsername(applicantUsername);
 	}
 
+	public JobApplication[] getApplicationsByJobId(int jobId) {
+		return jobApplicationRepository.findByJobOpeningId(jobId);
+	}
+
 	// If job ID not provided, treat as ADD action
 	public boolean addUpdateJobOpening(JobOpeningAddUpdateRequest jobOpeningUpdateRequest) {
 		Optional<JobOpening> jobOpening = Optional.empty();

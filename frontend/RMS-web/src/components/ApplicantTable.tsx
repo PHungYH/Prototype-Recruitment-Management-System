@@ -13,53 +13,10 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
 import { visuallyHidden } from '@mui/utils';
 import Button from '@mui/material/Button';
+import type { Data } from '../commonInterface/ApplicationTableData.interface';
 
-interface Data {
-  id: number;
-  calories: number;
-  carbs: number;
-  fat: number;
-  name: string;
-  protein: number;
-}
-
-function createData(
-  id: number,
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number,
-): Data {
-  return {
-    id,
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
-  };
-}
-
-const rows = [
-  createData(1, 'Cupcake', 305, 3.7, 67, 4.3),
-  createData(2, 'Donut', 452, 25.0, 51, 4.9),
-  createData(3, 'Eclair', 262, 16.0, 24, 6.0),
-  createData(4, 'Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData(5, 'Gingerbread', 356, 16.0, 49, 3.9),
-  createData(6, 'Honeycomb', 408, 3.2, 87, 6.5),
-  createData(7, 'Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData(8, 'Jelly Bean', 375, 0.0, 94, 0.0),
-  createData(9, 'KitKat', 518, 26.0, 65, 7.0),
-  createData(10, 'Lollipop', 392, 0.2, 98, 0.0),
-  createData(11, 'Marshmallow', 318, 0, 81, 2.0),
-  createData(12, 'Nougat', 360, 19.0, 9, 37.0),
-  createData(13, 'Oreo', 437, 18.0, 63, 4.0),
-];
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -94,35 +51,35 @@ interface HeadCell {
 
 const headCells: readonly HeadCell[] = [
   {
-    id: 'name',
+    id: 'fullname',
     numeric: false,
     disablePadding: true,
-    label: 'Dessert (100g serving)',
+    label: 'Full Name (first, last)',
   },
   {
-    id: 'calories',
-    numeric: true,
+    id: 'alias',
+    numeric: false,
     disablePadding: false,
-    label: 'Calories',
+    label: 'Alias',
   },
   {
-    id: 'fat',
-    numeric: true,
+    id: 'idcard',
+    numeric: false,
     disablePadding: false,
-    label: 'Fat (g)',
+    label: 'ID Card (first 4 char.)',
   },
   {
-    id: 'carbs',
-    numeric: true,
+    id: 'phone',
+    numeric: false,
     disablePadding: false,
-    label: 'Carbs (g)',
+    label: 'Contact',
   },
   {
-    id: 'protein',
+    id: 'appliedTimestamp',
     numeric: true,
-    disablePadding: false,
-    label: 'Protein (g)',
-  },
+    disablePadding: true,
+    label: 'Applied Time',
+  }
 ];
 
 interface EnhancedTableProps {
@@ -183,8 +140,8 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 }
 interface EnhancedTableToolbarProps {
   numSelected: number;
-  onManageNewStatus: ()=>void;
-  onManageNewInterview: ()=>void;
+  onManageNewStatus: () => void;
+  onManageNewInterview: () => void;
 }
 function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
   const { numSelected } = props;
@@ -223,23 +180,44 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
 
       {numSelected > 0 ? (
         <div className='flex flex-row'>
-            <Button variant='text' onClick={props.onManageNewStatus}>New Status</Button>
-            <Button variant='text' onClick={props.onManageNewInterview}>New Interview</Button>
+          <Button variant='text' onClick={props.onManageNewStatus}>New Status</Button>
+          <Button variant='text' onClick={props.onManageNewInterview}>New Interview</Button>
         </div>
-      ) 
-      :
-      (
-        <Button variant='text' onClick={()=> {}}>Filter</Button>
-      )}
+      )
+        :
+        (
+          <Button variant='text' onClick={() => { }}>Filter</Button>
+        )}
     </Toolbar>
   );
 }
-export default function ApplicantTable() {
-  const [order, setOrder] = React.useState<Order>('asc');
-  const [orderBy, setOrderBy] = React.useState<keyof Data>('calories');
+
+// const rows = [
+//   createData(1, 'Cupcake', 305, 3.7, 67, 4.3),
+//   createData(2, 'Donut', 452, 25.0, 51, 4.9),
+//   createData(3, 'Eclair', 262, 16.0, 24, 6.0),
+//   createData(4, 'Frozen yoghurt', 159, 6.0, 24, 4.0),
+//   createData(5, 'Gingerbread', 356, 16.0, 49, 3.9),
+//   createData(6, 'Honeycomb', 408, 3.2, 87, 6.5),
+//   createData(7, 'Ice cream sandwich', 237, 9.0, 37, 4.3),
+//   createData(8, 'Jelly Bean', 375, 0.0, 94, 0.0),
+//   createData(9, 'KitKat', 518, 26.0, 65, 7.0),
+//   createData(10, 'Lollipop', 392, 0.2, 98, 0.0),
+//   createData(11, 'Marshmallow', 318, 0, 81, 2.0),
+//   createData(12, 'Nougat', 360, 19.0, 9, 37.0),
+//   createData(13, 'Oreo', 437, 18.0, 63, 4.0),
+// ];
+
+type ApplicantTableProps = {
+  rows: Data[]
+}
+export default function ApplicantTable(props: ApplicantTableProps) {
+  const [order, setOrder] = React.useState<Order>('desc');
+  const [orderBy, setOrderBy] = React.useState<keyof Data>('appliedTimestamp');
   const [selected, setSelected] = React.useState<readonly number[]>([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const rows = props.rows;
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -358,12 +336,12 @@ export default function ApplicantTable() {
                       scope="row"
                       padding="none"
                     >
-                      {row.name}
+                      {row.fullname}
                     </TableCell>
-                    <TableCell align="right">{row.calories}</TableCell>
-                    <TableCell align="right">{row.fat}</TableCell>
-                    <TableCell align="right">{row.carbs}</TableCell>
-                    <TableCell align="right">{row.protein}</TableCell>
+                    <TableCell align="left">{row.alias}</TableCell>
+                    <TableCell align="left">{row.idcard}</TableCell>
+                    <TableCell align="left">{row.phone}</TableCell>
+                    <TableCell align="left">{row.appliedTimestamp}</TableCell>
                   </TableRow>
                 );
               })}
@@ -373,7 +351,7 @@ export default function ApplicantTable() {
                     height: 53 * emptyRows,
                   }}
                 >
-                  <TableCell colSpan={6} />
+                  <TableCell colSpan={5} />
                 </TableRow>
               )}
             </TableBody>

@@ -13,8 +13,6 @@ import com.peterhung.hk.demo.rms.rms.exceptions.InvalidJobApplicationException;
 import com.peterhung.hk.demo.rms.rms.model.*;
 import com.peterhung.hk.demo.rms.rms.securityUtils.JwtUtils;
 import com.peterhung.hk.demo.rms.rms.service.JobService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.*;
 
@@ -95,4 +93,11 @@ public class JobController {
 		List<Department> employmentTypes = jobService.getAvailableDepartments();
 		return ResponseEntity.ok(new DepartmentsResponse(employmentTypes));
 	}
+
+	@GetMapping("/getAllApplicationsByJob")
+    @RequireAdminToken
+    public ResponseEntity<?> getAllApplicationsByJob(@RequestParam int jobId) {
+		JobApplication[] applications = jobService.getApplicationsByJobId(jobId);
+        return ResponseEntity.ok(new JobApplicationsResponse(true, applications));
+    }
 }

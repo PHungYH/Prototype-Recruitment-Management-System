@@ -7,6 +7,7 @@ import { HTTPHelper } from '../utils/HTTPHelper';
 import UnderlineLink from './UnderlineLink';
 import JobOpeningAddEditFormDialog from './JobOpeningAddEditFormDialog';
 import ApplicantTable from './ApplicantTable';
+import { type Data, createData } from '../commonInterface/ApplicationTableData.interface';
 
 interface ApplyResponse {
   result: boolean,
@@ -47,6 +48,10 @@ const JobList: React.FC<JobListProps> = ({ jobs, currentPage, totalPage, current
     } else {
       alert("Failed to apply for the job: " + currentJob?.jobTitle + "\nReason: " + response.message);
     }
+  }
+
+  const genApplications = (): Data[] => {
+    return [createData(1, "TEST", "TEST", "Y1234", "96444666", 12345)];
   }
 
   useEffect(() => {
@@ -100,7 +105,7 @@ const JobList: React.FC<JobListProps> = ({ jobs, currentPage, totalPage, current
         </div>
       </div>
       {showApplicantTable?  
-        <div className='border-l-4 border-gray-200 pl-4 my-4'><ApplicantTable/></div>
+        <div className='border-l-4 border-gray-200 pl-4 my-4'><ApplicantTable rows={genApplications()}/></div>
         :
         <div className='border-l-4 border-gray-200 pl-4 my-4'>
           <h1 className='text-3xl'>{currentJob?.jobTitle}</h1>
