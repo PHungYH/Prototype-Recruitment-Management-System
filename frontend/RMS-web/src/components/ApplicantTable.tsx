@@ -210,6 +210,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
 
 type ApplicantTableProps = {
   rows: Data[]
+  reload: () => void
 }
 export default function ApplicantTable(props: ApplicantTableProps) {
   const [order, setOrder] = React.useState<Order>('desc');
@@ -268,6 +269,7 @@ export default function ApplicantTable(props: ApplicantTableProps) {
   const handleNewStatus = () => {
     alert("handleNewStatus");
     console.log(selected);
+    props.reload();
   }
 
   const handleNewInterview = () => {
