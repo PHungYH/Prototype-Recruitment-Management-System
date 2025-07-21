@@ -7,13 +7,25 @@
 - Free up port **5173** for the **web platform**
 ---
 
-## Milestones
+## Milestones (Completed Features)
+### Applicant & Job Management
+- Applicant registration and profile management
+- Admin panel to view and manage applicants
+- Create, update, deactivate, and delete job openings
+- View applicants by job listing
 
-### Completed Features (full stack)
+### Application Process
+- Submit job applications
+- View history of submitted applications
+- Job selection and review interface for applicants
 
-#### Recruitment Management System (RMS)
-1. Applicant and admin login/registration, with session management
-2. Profile management
+### Authentication & User Roles
+- User authentication with login and token validation (JWT)
+- Role-based access for applicants and employees
+- Security reinforcements
 
-#### Employee Management System (HRMS)
-1. Login
+### User Interface Components
+- Paginated job listings
+- Sorting functionality for job views
+- Alert notifications for key user actions
+- Applicant panel integrated into front-end
