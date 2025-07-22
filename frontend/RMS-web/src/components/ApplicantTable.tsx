@@ -335,7 +335,7 @@ export default function ApplicantTable(props: ApplicantTableProps) {
         <AdminManageViewProfileDialog 
           toggleSetter={setShowApplicantProfileDialog} 
           toggle={showApplicantProfileDialog} 
-          applicantProfile={rowsProfile.get(rows[selected[0]].id)}/>}
+          applicantProfile={rowsProfile.get(selected[0])}/>}
       <Paper sx={{ width: '100%', mb: 2 }}>
         <EnhancedTableToolbar numSelected={selected.length} 
           onSetNewStatus={handleNewStatus} 
