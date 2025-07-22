@@ -1,3 +1,4 @@
+import type { ProfileResponse } from "./Applicant.interface";
 import type { Job } from "./JobListResponse.interface";
 
 export interface AppHistoryResponse {
@@ -12,6 +13,13 @@ export interface JobApplication {
   jobOpening: Job;
   status: Status;
   appliedTime: string;
+  applicant: {
+    id: number;
+    email: string;
+    username: string;
+    profile: ProfileResponse;
+    phoneNumber: string;
+  };
 }
 
 export interface Status {

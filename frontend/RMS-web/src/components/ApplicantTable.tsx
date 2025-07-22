@@ -15,7 +15,10 @@ import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import { visuallyHidden } from '@mui/utils';
 import Button from '@mui/material/Button';
-import type { Data } from '../commonInterface/ApplicationTableData.interface';
+import { createData, type Data } from '../commonInterface/ApplicationTableData.interface';
+import type { AppHistoryResponse } from '../commonInterface/AppHistoryResponse.interface';
+import appGlobal from '../utils/AppGlobal';
+import { HTTPHelper } from '../utils/HTTPHelper';
 
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -142,6 +145,7 @@ interface EnhancedTableToolbarProps {
   numSelected: number;
   onManageNewStatus: () => void;
   onManageNewInterview: () => void;
+  setShowApplicantTable: React.Dispatch<React.SetStateAction<boolean>>;
 }
 function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
   const { numSelected } = props;
@@ -186,7 +190,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
       )
         :
         (
-          <Button variant='text' onClick={() => { }}>Filter</Button>
+          <Button variant='text' onClick={() => {props.setShowApplicantTable(false)}}>Back</Button>
         )}
     </Toolbar>
   );
@@ -209,8 +213,8 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
 // ];
 
 type ApplicantTableProps = {
-  rows: Data[]
-  reload: () => void
+  currentJobId: number
+  setShowApplicantTable: React.Dispatch<React.SetStateAction<boolean>>
 }
 export default function ApplicantTable(props: ApplicantTableProps) {
   const [order, setOrder] = React.useState<Order>('desc');
@@ -218,7 +222,30 @@ export default function ApplicantTable(props: ApplicantTableProps) {
   const [selected, setSelected] = React.useState<readonly number[]>([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const rows = props.rows;
+  const [rows, setRows] = React.useState<Data[]>([]);
+  
+  React.useEffect(() => {
+    HTTPHelper.call<AppHistoryResponse>(
+        `${appGlobal.endpoint_job}/getAllApplicationsByJob?jobId=${props.currentJobId}`,
+        'GET'
+    ).then((response) => {
+      console.log(response);
+      if (response.result) {
+        const newRows = response.resultList.map(app => createData(
+          app.id,
+          app.applicant.profile.firstname + ' ' + app.applicant.profile.lastname,
+          app.applicant.profile.alias,
+          app.applicant.profile.idcard,
+          app.applicant.profile.phoneNumber,
+          Math.floor(new Date(app.appliedTime).getTime() / 1000)
+        ));
+        setRows([...newRows]);
+      }
+    }).catch((error) => {
+      console.error("Error fetching data:", error);
+      alert("Failed to retrieve applications.");
+    });
+  }, []);
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -269,7 +296,6 @@ export default function ApplicantTable(props: ApplicantTableProps) {
   const handleNewStatus = () => {
     alert("handleNewStatus");
     console.log(selected);
-    props.reload();
   }
 
   const handleNewInterview = () => {
@@ -286,13 +312,13 @@ export default function ApplicantTable(props: ApplicantTableProps) {
       [...rows]
         .sort(getComparator(order, orderBy))
         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
-    [order, orderBy, page, rowsPerPage],
+    [order, orderBy, page, rowsPerPage, rows],
   );
 
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} onManageNewStatus={handleNewStatus} onManageNewInterview={handleNewInterview} />
+        <EnhancedTableToolbar numSelected={selected.length} onManageNewStatus={handleNewStatus} onManageNewInterview={handleNewInterview} setShowApplicantTable={props.setShowApplicantTable}/>
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -343,7 +369,7 @@ export default function ApplicantTable(props: ApplicantTableProps) {
                     <TableCell align="left">{row.alias}</TableCell>
                     <TableCell align="left">{row.idcard}</TableCell>
                     <TableCell align="left">{row.phone}</TableCell>
-                    <TableCell align="left">{row.appliedTimestamp}</TableCell>
+                    <TableCell align="left">{new Date(row.appliedTimestamp*1000).toISOString().replace("T", " ").substring(0, 19)}</TableCell>
                   </TableRow>
                 );
               })}

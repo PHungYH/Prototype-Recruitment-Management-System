@@ -4,6 +4,7 @@ import { HTTPHelper } from '../utils/HTTPHelper';
 import appGlobal from '../utils/AppGlobal';
 import Select from 'react-select';
 import countryList from 'react-select-country-list'
+import type { ProfileResponse } from '../commonInterface/Applicant.interface';
 
 type FormValues = {
   lastname: string,
@@ -20,18 +21,6 @@ type FormValues = {
   linkedin: string
 }
 
-interface ProfileResponse {
-  lastname: string,
-  firstname: string,
-  alias: string,
-  idcard: string,
-  dateOfBirth: string,
-  gender: string,
-  phoneNumber: string,
-  address: string,
-  nationality: string,
-  linkedin: string
-}
 
 interface SaveResponse {
 	result: boolean;

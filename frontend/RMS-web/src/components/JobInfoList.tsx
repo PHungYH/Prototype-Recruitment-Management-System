@@ -52,22 +52,6 @@ const JobList: React.FC<JobListProps> = ({ jobs, currentPage, totalPage, current
     }
   }
 
-  const genApplications = () => {
-    HTTPHelper.call<AppHistoryResponse>(
-        `${appGlobal.endpoint_job}/getAllApplicationsByJob?jobId=${currentJob.id}`,
-        'GET'
-    ).then((response) => {
-      console.log(response);
-      const newArray = [createData(1, "TEST", "TEST", "Y1234", "96444666", Date.now())]
-
-      setCurrentApplications([...newArray]);
-      setShowApplicantTable(true);
-    }).catch((error) => {
-      console.error("Error fetching data:", error);
-      alert("Failed to retrieve applications.");
-    });
-  }
-
   useEffect(() => {
     // Show first job by default
     if (jobs.length > 0)
@@ -120,7 +104,7 @@ const JobList: React.FC<JobListProps> = ({ jobs, currentPage, totalPage, current
         </div>
       </div>
       {showApplicantTable?  
-        <div className='border-l-4 border-gray-200 pl-4 my-4'><ApplicantTable rows={currentApplications} reload={genApplications}/></div>
+        <div className='border-l-4 border-gray-200 pl-4 my-4'><ApplicantTable currentJobId={currentJob.id} setShowApplicantTable={setShowApplicantTable}/></div>
         :
         <div className='border-l-4 border-gray-200 pl-4 my-4'>
           <h1 className='text-3xl'>{currentJob?.jobTitle}</h1>
@@ -145,7 +129,7 @@ const JobList: React.FC<JobListProps> = ({ jobs, currentPage, totalPage, current
             <Button variant='contained'
               color='primary'
               style={{ marginTop: 4 }}
-              onClick={() => genApplications()}>Show Applicants</Button>}
+              onClick={() => setShowApplicantTable(true)}>Show Applicants</Button>}
         </div>
       }
     </div>
