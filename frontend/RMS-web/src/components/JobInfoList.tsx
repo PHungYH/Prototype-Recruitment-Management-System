@@ -26,7 +26,6 @@ interface JobListProps {
 
 const JobList: React.FC<JobListProps> = ({ jobs, currentPage, totalPage, currentUserType, onPageChanged }) => {
   const [currentJob, setCurrentJob] = useState<Job>({} as Job);
-  const [currentApplications, setCurrentApplications] = useState<Data[]>([]);
   const [showAddJobOpening, setShowAddJobOpening] = useState(false);
   const [showApplicantTable, setShowApplicantTable] = useState(false);
 

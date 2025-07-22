@@ -5,6 +5,7 @@ export interface Data {
   idcard: string;
   phone: string;
   appliedTimestamp: number;
+  status: string
 }
 
 export function createData(
@@ -13,7 +14,8 @@ export function createData(
   alias: string,
   idcard: string,
   phone: string,
-  appliedTimestamp: number
+  appliedTimestamp: number,
+  status: string
 ): Data {
   return {
     id,
@@ -21,6 +23,7 @@ export function createData(
     alias,
     idcard,
     phone,
-    appliedTimestamp
+    appliedTimestamp,
+    status
   };
 }

@@ -19,6 +19,8 @@ import { createData, type Data } from '../commonInterface/ApplicationTableData.i
 import type { AppHistoryResponse } from '../commonInterface/AppHistoryResponse.interface';
 import appGlobal from '../utils/AppGlobal';
 import { HTTPHelper } from '../utils/HTTPHelper';
+import AdminManageViewProfileDialog from './AdminManageViewProfileDialog';
+import type { ProfileResponse } from '../commonInterface/Applicant.interface';
 
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -82,6 +84,12 @@ const headCells: readonly HeadCell[] = [
     numeric: true,
     disablePadding: true,
     label: 'Applied Time',
+  },
+  {
+    id: 'status',
+    numeric: false,
+    disablePadding: false,
+    label: 'Status'
   }
 ];
 
@@ -143,8 +151,9 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 }
 interface EnhancedTableToolbarProps {
   numSelected: number;
-  onManageNewStatus: () => void;
-  onManageNewInterview: () => void;
+  onSetNewStatus: React.Dispatch<React.SetStateAction<boolean>>;
+  onSetNewInterview: React.Dispatch<React.SetStateAction<boolean>>;
+  onSetViewProfile: React.Dispatch<React.SetStateAction<boolean>>;
   setShowApplicantTable: React.Dispatch<React.SetStateAction<boolean>>;
 }
 function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
@@ -182,16 +191,22 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
         </Typography>
       )}
 
-      {numSelected > 0 ? (
+      {numSelected === 0 ? null : (
         <div className='flex flex-row'>
-          <Button variant='text' onClick={props.onManageNewStatus}>New Status</Button>
-          <Button variant='text' onClick={props.onManageNewInterview}>New Interview</Button>
+          {numSelected === 1 ? (
+            <>
+              <Button variant='text' onClick={() => props.onSetNewStatus(true)}>New Status</Button>
+              <Button variant='text' onClick={() => props.onSetNewInterview(true)}>New Interview</Button>
+              <Button variant='text' onClick={() => props.onSetViewProfile(true)}>View Profile</Button>
+            </>
+          ) : (
+            <>
+              <Button variant='text' onClick={() => props.onSetNewStatus(true)}>New Status</Button>
+              <Button variant='text' onClick={() => props.onSetNewInterview(true)}>New Interview</Button>
+            </>
+          )}
         </div>
-      )
-        :
-        (
-          <Button variant='text' onClick={() => {props.setShowApplicantTable(false)}}>Back</Button>
-        )}
+      )}
     </Toolbar>
   );
 }
@@ -207,6 +222,10 @@ export default function ApplicantTable(props: ApplicantTableProps) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [rows, setRows] = React.useState<Data[]>([]);
+  const [rowsProfile, setRowsProfile] = React.useState<Map<number, ProfileResponse>>(new Map<number, ProfileResponse>);
+  const [showApplicantProfileDialog, setShowApplicantProfileDialog] = React.useState(false);
+  const [showNewInterviewDialog, setShowNewInterviewDialog] = React.useState(false);
+  const [showNewStatusDialog, setShowNewStatusDialog] = React.useState(false);
   
   React.useEffect(() => {
     HTTPHelper.call<AppHistoryResponse>(
@@ -221,15 +240,28 @@ export default function ApplicantTable(props: ApplicantTableProps) {
           app.applicant.profile.alias,
           app.applicant.profile.idcard,
           app.applicant.profile.phoneNumber,
-          Math.floor(new Date(app.appliedTime).getTime() / 1000)
+          Math.floor(new Date(app.appliedTime).getTime() / 1000),
+          app.status.name
         ));
         setRows([...newRows]);
+
+        const profMap = new Map<number, ProfileResponse>();
+
+        response.resultList.forEach(app => {
+          profMap.set(app.id, app.applicant.profile);
+        });
+        setRowsProfile(profMap);
       }
     }).catch((error) => {
       console.error("Error fetching data:", error);
       alert("Failed to retrieve applications.");
     });
   }, []);
+
+  // Debug
+  React.useEffect(() => {
+    console.log("Updated rowsProfile:", rowsProfile);
+  }, [rowsProfile]);
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -278,12 +310,10 @@ export default function ApplicantTable(props: ApplicantTableProps) {
   };
 
   const handleNewStatus = () => {
-    alert("handleNewStatus");
     console.log(selected);
   }
 
   const handleNewInterview = () => {
-    alert("handleNewInterview");
     console.log(selected);
   }
 
@@ -301,8 +331,17 @@ export default function ApplicantTable(props: ApplicantTableProps) {
 
   return (
     <Box sx={{ width: '100%' }}>
+      {showApplicantProfileDialog && 
+        <AdminManageViewProfileDialog 
+          toggleSetter={setShowApplicantProfileDialog} 
+          toggle={showApplicantProfileDialog} 
+          applicantProfile={rowsProfile.get(rows[selected[0]].id)}/>}
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} onManageNewStatus={handleNewStatus} onManageNewInterview={handleNewInterview} setShowApplicantTable={props.setShowApplicantTable}/>
+        <EnhancedTableToolbar numSelected={selected.length} 
+          onSetNewStatus={handleNewStatus} 
+          onSetNewInterview={handleNewInterview} 
+          onSetViewProfile={setShowApplicantProfileDialog}
+          setShowApplicantTable={props.setShowApplicantTable}/>
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -354,6 +393,7 @@ export default function ApplicantTable(props: ApplicantTableProps) {
                     <TableCell align="left">{row.idcard}</TableCell>
                     <TableCell align="left">{row.phone}</TableCell>
                     <TableCell align="left">{new Date(row.appliedTimestamp*1000).toISOString().replace("T", " ").substring(0, 19)}</TableCell>
+                    <TableCell align="left">{row.status}</TableCell>
                   </TableRow>
                 );
               })}
@@ -363,7 +403,7 @@ export default function ApplicantTable(props: ApplicantTableProps) {
                     height: 53 * emptyRows,
                   }}
                 >
-                  <TableCell colSpan={5} />
+                  <TableCell colSpan={6} />
                 </TableRow>
               )}
             </TableBody>
