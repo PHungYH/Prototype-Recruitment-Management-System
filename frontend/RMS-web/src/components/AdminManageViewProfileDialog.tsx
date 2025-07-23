@@ -30,12 +30,38 @@ const AdminManageViewProfileDialog = (props: {
         aria-labelledby="responsive-dialog-title"
       >
         <DialogTitle id="responsive-dialog-title">
-          {"Use Google's location service?"}
+          {"View Applicant Profile"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Let Google help apps determine location. This means sending anonymous
-            location data to Google, even when no apps are running.
+            <strong>First Name:</strong> {props.applicantProfile?.firstname}
+          </DialogContentText>
+          <DialogContentText>
+            <strong>Last Name:</strong> {props.applicantProfile?.lastname}
+          </DialogContentText>
+          <DialogContentText>
+            <strong>Alias:</strong> {props.applicantProfile?.alias}
+          </DialogContentText>
+          <DialogContentText>
+            <strong>ID Card (first 4 char.):</strong> {props.applicantProfile?.idcard}
+          </DialogContentText>
+          <DialogContentText>
+            <strong>D.o.B (YYYY-MM-DD):</strong> {props.applicantProfile?.dateOfBirth.replace("T", "")}
+          </DialogContentText>
+          <DialogContentText>
+            <strong>Gender:</strong> {props.applicantProfile?.gender}
+          </DialogContentText>
+          <DialogContentText>
+            <strong>Contact:</strong> {props.applicantProfile?.phoneNumber}
+          </DialogContentText>
+          <DialogContentText>
+            <strong>Address:</strong> {props.applicantProfile?.address}
+          </DialogContentText>
+          <DialogContentText>
+            <strong>Nationality:</strong> {props.applicantProfile?.nationality}
+          </DialogContentText>
+          <DialogContentText>
+            <strong>LinkedIn name:</strong> {props.applicantProfile?.linkedin}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -43,7 +69,7 @@ const AdminManageViewProfileDialog = (props: {
             Close
           </Button>
           <Button onClick={handleShowProfile} autoFocus>
-            Agree
+            View LinkedIn
           </Button>
         </DialogActions>
       </Dialog>

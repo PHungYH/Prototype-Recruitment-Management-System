@@ -331,11 +331,13 @@ export default function ApplicantTable(props: ApplicantTableProps) {
 
   return (
     <Box sx={{ width: '100%' }}>
+      {/* Showing dialogs */}
       {showApplicantProfileDialog && 
         <AdminManageViewProfileDialog 
           toggleSetter={setShowApplicantProfileDialog} 
           toggle={showApplicantProfileDialog} 
           applicantProfile={rowsProfile.get(selected[0])}/>}
+
       <Paper sx={{ width: '100%', mb: 2 }}>
         <EnhancedTableToolbar numSelected={selected.length} 
           onSetNewStatus={handleNewStatus} 
