@@ -21,6 +21,7 @@ import appGlobal from '../utils/AppGlobal';
 import { HTTPHelper } from '../utils/HTTPHelper';
 import AdminManageViewProfileDialog from './AdminManageViewProfileDialog';
 import type { ProfileResponse } from '../commonInterface/Applicant.interface';
+import AdminManageNewInterfaceDialog from './AdminManageNewInterfaceDialog';
 
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -338,10 +339,16 @@ export default function ApplicantTable(props: ApplicantTableProps) {
           toggle={showApplicantProfileDialog} 
           applicantProfile={rowsProfile.get(selected[0])}/>}
 
+      {showNewInterviewDialog && 
+        <AdminManageNewInterfaceDialog 
+          toggleSetter={setShowNewInterviewDialog} 
+          toggle={showNewInterviewDialog}
+          jobApplicationIds={selected}/>}
+
       <Paper sx={{ width: '100%', mb: 2 }}>
         <EnhancedTableToolbar numSelected={selected.length} 
           onSetNewStatus={handleNewStatus} 
-          onSetNewInterview={handleNewInterview} 
+          onSetNewInterview={setShowNewInterviewDialog} 
           onSetViewProfile={setShowApplicantProfileDialog}
           setShowApplicantTable={props.setShowApplicantTable}/>
         <TableContainer>

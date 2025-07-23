@@ -1,12 +1,14 @@
 package com.peterhung.hk.demo.rms.rms.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
+import com.peterhung.hk.demo.rms.rms.dto.request.InterviewRequest;
 import com.peterhung.hk.demo.rms.rms.dto.request.JobOpeningAddUpdateRequest;
 import com.peterhung.hk.demo.rms.rms.exceptions.InvalidJobApplicationException;
 import com.peterhung.hk.demo.rms.rms.model.Applicant;
@@ -37,7 +39,9 @@ public class JobService {
 			2, "Job opening not found",
 			3, "The job post has been closed",
 			4, "Applicant not found",
-			5, "Missing data"
+			5, "Missing data",
+			6, "Invalid interview time",
+			7, "Job application not found"
 	);
 
 	public Page<JobOpening> getPaginatedActiveJobOpenings(int page) {
@@ -137,6 +141,31 @@ public class JobService {
 		opening.setJobRequirement(jobOpeningUpdateRequest.getRequirement());
 
 		jobOpeningRepository.save(opening);
+		return true;
+	}
+
+	public boolean addUpdateInterviewSchedule(InterviewRequest interviewRequest, ArrayList<Integer> missingIds) {
+		// Validations
+		if (interviewRequest.getInterviewTime().isBefore(LocalDateTime.now())) {
+			lastErrorCode = 6;
+			return false;
+		}
+		if (interviewRequest.getInterviewLocation().isEmpty()) {
+			lastErrorCode = 5;
+			return false;
+		}
+		
+		for (int id: interviewRequest.getJobApplicationIds()) {
+			Optional<JobApplication> application = jobApplicationRepository.findById(id);
+			if (application.isEmpty()) {
+				missingIds.add(id);
+			}
+
+			application.get().setInterviewTime(interviewRequest.getInterviewTime());
+			application.get().setInterviewLocation(interviewRequest.getInterviewLocation());
+			jobApplicationRepository.save(application.get());
+		}
+
 		return true;
 	}
 

@@ -100,4 +100,18 @@ public class JobController {
 		JobApplication[] applications = jobService.getApplicationsByJobId(jobId);
         return ResponseEntity.ok(new JobApplicationsResponse(true, applications));
     }
+
+	@PostMapping("/addUpdateInterviewSchedule")
+	@RequireAdminToken
+	public ResponseEntity<?> addUpdateInterviewSchedule(@RequestBody InterviewRequest interviewRequest) {
+		ArrayList<Integer> missingIds = new ArrayList<>();
+		if (jobService.addUpdateInterviewSchedule(interviewRequest, missingIds)) {
+			return ResponseEntity.ok(new SimpleBooleanResponse(true));
+		} else if (missingIds.isEmpty()) {
+			return ResponseEntity.ok(new SimpleErrorResponse(jobService.getLastErrorCode(),jobService.getLastErrorMessage()));
+		} else {
+			return ResponseEntity.ok(new ErrorWithMissingIdsResponse(missingIds));
+		}
+		
+	}
 }
