@@ -77,7 +77,7 @@ INSERT INTO job_salary_budgets (job_id, salary_from, salary_to) VALUES
 -- Insert application status
 INSERT INTO application_status (status_name) VALUES 
 ('Applied'),
-('Reviewing'),
+('Interview'),
 ('Offered'),
 ('Rejected'),
 ('Closed');

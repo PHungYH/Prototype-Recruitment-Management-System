@@ -114,4 +114,10 @@ public class JobController {
 		}
 		
 	}
+
+	@GetMapping("/getUpcomingInterviewScheduleByJob")
+	@RequireAdminToken
+	public ResponseEntity<?> getUpcomingInterviewScheduleByJob(@RequestParam int jobId) {
+		return ResponseEntity.ok("");
+	}
 }

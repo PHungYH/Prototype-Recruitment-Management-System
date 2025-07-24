@@ -2,14 +2,20 @@ package com.peterhung.hk.demo.rms.rms.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
+import com.peterhung.hk.demo.rms.rms.controller.AuthController;
 import com.peterhung.hk.demo.rms.rms.dto.request.InterviewRequest;
 import com.peterhung.hk.demo.rms.rms.dto.request.JobOpeningAddUpdateRequest;
+import com.peterhung.hk.demo.rms.rms.dto.response.InterviewStruct;
 import com.peterhung.hk.demo.rms.rms.exceptions.InvalidJobApplicationException;
 import com.peterhung.hk.demo.rms.rms.model.Applicant;
 import com.peterhung.hk.demo.rms.rms.model.Department;
@@ -20,6 +26,8 @@ import com.peterhung.hk.demo.rms.rms.repository.*;
 
 @Service
 public class JobService {
+	private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
+
 	@Autowired
 	private EmploymentTypeRepository employmentTypeRepository;
 	@Autowired
@@ -145,8 +153,9 @@ public class JobService {
 	}
 
 	public boolean addUpdateInterviewSchedule(InterviewRequest interviewRequest, ArrayList<Integer> missingIds) {
+		logger.info(String.format("Received %s | Current %s", interviewRequest.getInterviewTime(), ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime()));
 		// Validations
-		if (interviewRequest.getInterviewTime().isBefore(LocalDateTime.now())) {
+		if (interviewRequest.getInterviewTime().isBefore(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime())) {
 			lastErrorCode = 6;
 			return false;
 		}
@@ -163,10 +172,22 @@ public class JobService {
 
 			application.get().setInterviewTime(interviewRequest.getInterviewTime());
 			application.get().setInterviewLocation(interviewRequest.getInterviewLocation());
+			application.get().setStatus(applicationStatusRepository.findByName("Interview"));
 			jobApplicationRepository.save(application.get());
 		}
 
 		return true;
+	}
+
+	public ArrayList<InterviewStruct> getUpcomingInterviewScheduleByJob(int jobId) {
+		JobApplication[] applications = getApplicationsByJobId(jobId);
+		ArrayList<InterviewStruct> struct = new ArrayList<>();
+		for (JobApplication application : applications) {
+			if (application.getInterviewTime() != null && application.getInterviewTime().isAfter(LocalDateTime.now())) {
+				struct.add(new InterviewStruct());
+			}
+		}
+		return struct;
 	}
 
 	public boolean deactivateJobOpening(int jobId) throws InvalidJobApplicationException {

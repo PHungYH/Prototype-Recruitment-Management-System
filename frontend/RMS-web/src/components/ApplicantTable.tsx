@@ -21,7 +21,7 @@ import appGlobal from '../utils/AppGlobal';
 import { HTTPHelper } from '../utils/HTTPHelper';
 import AdminManageViewProfileDialog from './AdminManageViewProfileDialog';
 import type { ProfileResponse } from '../commonInterface/Applicant.interface';
-import AdminManageNewInterfaceDialog from './AdminManageNewInterfaceDialog';
+import AdminManageNewInterviewDialog from './AdminManageNewInterviewDialog';
 
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -229,6 +229,10 @@ export default function ApplicantTable(props: ApplicantTableProps) {
   const [showNewStatusDialog, setShowNewStatusDialog] = React.useState(false);
   
   React.useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = () => {
     HTTPHelper.call<AppHistoryResponse>(
         `${appGlobal.endpoint_job}/getAllApplicationsByJob?jobId=${props.currentJobId}`,
         'GET'
@@ -257,7 +261,7 @@ export default function ApplicantTable(props: ApplicantTableProps) {
       console.error("Error fetching data:", error);
       alert("Failed to retrieve applications.");
     });
-  }, []);
+  }
 
   // Debug
   React.useEffect(() => {
@@ -314,10 +318,6 @@ export default function ApplicantTable(props: ApplicantTableProps) {
     console.log(selected);
   }
 
-  const handleNewInterview = () => {
-    console.log(selected);
-  }
-
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
@@ -340,10 +340,11 @@ export default function ApplicantTable(props: ApplicantTableProps) {
           applicantProfile={rowsProfile.get(selected[0])}/>}
 
       {showNewInterviewDialog && 
-        <AdminManageNewInterfaceDialog 
+        <AdminManageNewInterviewDialog 
           toggleSetter={setShowNewInterviewDialog} 
           toggle={showNewInterviewDialog}
-          jobApplicationIds={selected}/>}
+          jobApplicationIds={selected}
+          dataRefresher={fetchData}/>}
 
       <Paper sx={{ width: '100%', mb: 2 }}>
         <EnhancedTableToolbar numSelected={selected.length} 
