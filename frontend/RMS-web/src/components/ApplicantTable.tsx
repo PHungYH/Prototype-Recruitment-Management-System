@@ -22,6 +22,7 @@ import { HTTPHelper } from '../utils/HTTPHelper';
 import AdminManageViewProfileDialog from './AdminManageViewProfileDialog';
 import type { ProfileResponse } from '../commonInterface/Applicant.interface';
 import AdminManageNewInterviewDialog from './AdminManageNewInterviewDialog';
+import { TimeHelper } from '../utils/TimeHelper';
 
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -84,13 +85,25 @@ const headCells: readonly HeadCell[] = [
     id: 'appliedTimestamp',
     numeric: true,
     disablePadding: true,
-    label: 'Applied Time',
+    label: 'Applied Time (HKT)',
   },
   {
     id: 'status',
     numeric: false,
     disablePadding: false,
     label: 'Status'
+  },
+  {
+    id: 'interviewLocation',
+    numeric: false,
+    disablePadding: false,
+    label: 'Interview Loc.'
+  },
+  {
+    id: 'interviewTimestamp',
+    numeric: true,
+    disablePadding: false,
+    label: 'Interview Time (HKT)'
   }
 ];
 
@@ -246,7 +259,9 @@ export default function ApplicantTable(props: ApplicantTableProps) {
           app.applicant.profile.idcard,
           app.applicant.profile.phoneNumber,
           Math.floor(new Date(app.appliedTime).getTime() / 1000),
-          app.status.name
+          app.status.name,
+          app.interviewLocation,
+          Math.floor(new Date(app.interviewTime).getTime() / 1000)
         ));
         setRows([...newRows]);
 
@@ -402,8 +417,10 @@ export default function ApplicantTable(props: ApplicantTableProps) {
                     <TableCell align="left">{row.alias}</TableCell>
                     <TableCell align="left">{row.idcard}</TableCell>
                     <TableCell align="left">{row.phone}</TableCell>
-                    <TableCell align="left">{new Date(row.appliedTimestamp*1000).toISOString().replace("T", " ").substring(0, 19)}</TableCell>
+                    <TableCell align="left">{TimeHelper.convertToHKTime(new Date(row.appliedTimestamp*1000).toISOString())}</TableCell>
                     <TableCell align="left">{row.status}</TableCell>
+                    <TableCell align="left">{row.interviewLocation}</TableCell>
+                    <TableCell align="left">{row.interviewTimestamp? TimeHelper.convertToHKTime(new Date(row.interviewTimestamp*1000).toISOString()) : ""}</TableCell>
                   </TableRow>
                 );
               })}
@@ -413,7 +430,7 @@ export default function ApplicantTable(props: ApplicantTableProps) {
                     height: 53 * emptyRows,
                   }}
                 >
-                  <TableCell colSpan={6} />
+                  <TableCell colSpan={8} />
                 </TableRow>
               )}
             </TableBody>

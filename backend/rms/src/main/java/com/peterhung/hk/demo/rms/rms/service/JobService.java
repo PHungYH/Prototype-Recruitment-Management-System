@@ -87,7 +87,7 @@ public class JobService {
 		JobApplication application = new JobApplication();
 		application.setJobOpening(jobOpening.get());
 		application.setApplicant(applicant);
-		application.setAppliedTime(java.time.LocalDateTime.now());
+		application.setAppliedTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
 		application.setStatus(applicationStatusRepository.findById(1).get());
 		jobApplicationRepository.save(application);
 

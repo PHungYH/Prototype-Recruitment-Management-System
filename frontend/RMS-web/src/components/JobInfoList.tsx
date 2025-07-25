@@ -7,8 +7,6 @@ import { HTTPHelper } from '../utils/HTTPHelper';
 import UnderlineLink from './UnderlineLink';
 import JobOpeningAddEditFormDialog from './JobOpeningAddEditFormDialog';
 import ApplicantTable from './ApplicantTable';
-import { type Data, createData } from '../commonInterface/ApplicationTableData.interface';
-import type { AppHistoryResponse } from '../commonInterface/AppHistoryResponse.interface';
 
 interface ApplyResponse {
   result: boolean,
@@ -108,7 +106,7 @@ const JobList: React.FC<JobListProps> = ({ jobs, currentPage, totalPage, current
         <div className='border-l-4 border-gray-200 pl-4 my-4'>
           <h1 className='text-3xl'>{currentJob?.jobTitle}</h1>
           <Divider />
-          <h2>Posted on: {currentJob?.jobPostedDate}</h2>
+          <h2>Posted on (HKT): {currentJob?.jobPostedDate}</h2>
           <h2>Mode: {currentJob?.belongingEmploymentType?.name}</h2>
           <h2>Department: {currentJob?.belongingDepartment?.name}</h2>
           <h2>Description:<br></br>{currentJob?.jobDescription?.split('\n').map((line, index) => (

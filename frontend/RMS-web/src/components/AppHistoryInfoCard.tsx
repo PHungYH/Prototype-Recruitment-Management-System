@@ -6,6 +6,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { TimeHelper } from '../utils/TimeHelper';
 
 
 type AppHistoryInfoCardProps = {
@@ -31,7 +32,7 @@ const AppHistoryInfoCard: React.FC<AppHistoryInfoCardProps> = ({ appHistory }) =
         </div>
       </div>
       <div className='flex flex-row items-center'>
-        <h1 className='mr-4'>Applied Date: {appHistory?.appliedTime.replace("T", " ")}</h1>
+        <h1 className='mr-4'>Applied Date: {TimeHelper.convertToHKTime(appHistory?.appliedTime)}</h1>
         <Button variant="outlined" onClick={() => setShowJobDetails(true)}>
           Open Job Details
         </Button>
