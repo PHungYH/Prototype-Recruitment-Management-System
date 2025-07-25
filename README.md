@@ -2,7 +2,7 @@
 
 ## Setups
 - Prepare a **MySQL server**, port set to **3306**
-- Create table ```platformrecruit```, run ```import.sql```, then ```testdata.sql```
+- Create database ```platformrecruit```, run ```import.sql```, then ```testdata.sql```
 - Free up ports **8008** and **8009** for the **Spring backend**
 - Free up port **5173** for the **web platform**
 ---
@@ -27,5 +27,4 @@
 ### User Interface Components
 - Paginated job listings
 - Sorting functionality for job views
-- Alert notifications for key user actions
 - Applicant panel integrated into front-end
