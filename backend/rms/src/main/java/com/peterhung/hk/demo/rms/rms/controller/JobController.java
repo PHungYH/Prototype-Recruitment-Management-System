@@ -115,9 +115,9 @@ public class JobController {
 		
 	}
 
-	@GetMapping("/getUpcomingInterviewScheduleByJob")
+	@GetMapping("/getAllUpcomingInterviewSchedule")
 	@RequireAdminToken
-	public ResponseEntity<?> getUpcomingInterviewScheduleByJob(@RequestParam int jobId) {
-		return ResponseEntity.ok("");
+	public ResponseEntity<?> getAllUpcomingInterviewSchedule() {
+		return ResponseEntity.ok(jobService.getAllUpcomingInterviewSchedules());
 	}
 }

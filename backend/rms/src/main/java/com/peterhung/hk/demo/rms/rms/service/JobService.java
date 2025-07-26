@@ -179,13 +179,14 @@ public class JobService {
 		return true;
 	}
 
-	public ArrayList<InterviewStruct> getUpcomingInterviewScheduleByJob(int jobId) {
-		JobApplication[] applications = getApplicationsByJobId(jobId);
+	public ArrayList<InterviewStruct> getAllUpcomingInterviewSchedules() {
+		JobApplication[] applications = jobApplicationRepository.findByInterviewTimeAfterOrderByInterviewTimeAsc(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
 		ArrayList<InterviewStruct> struct = new ArrayList<>();
 		for (JobApplication application : applications) {
-			if (application.getInterviewTime() != null && application.getInterviewTime().isAfter(LocalDateTime.now())) {
-				struct.add(new InterviewStruct());
-			}
+			struct.add(new InterviewStruct(application.getId(), 
+			application.getJobOpening().getJobTitle(), 
+			application.getInterviewTime(), 
+			application.getInterviewLocation()));
 		}
 		return struct;
 	}
