@@ -68,12 +68,6 @@ function createData(
   return { jobAppId, jobTitle, interviewTime, interviewLocation };
 }
 
-// const rows = [
-//   createData(1, 'India', 12354, 'dadada'),
-//   createData(2, 'India', 12355, 'dadada'),
-//   createData(3, 'India', 12356, 'dadada'),
-// ];
-
 export default function UpcomingScheduleTable() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
