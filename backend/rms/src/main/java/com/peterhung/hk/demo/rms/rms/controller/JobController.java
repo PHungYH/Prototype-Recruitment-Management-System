@@ -120,4 +120,13 @@ public class JobController {
 	public ResponseEntity<?> getAllUpcomingInterviewSchedule() {
 		return ResponseEntity.ok(jobService.getAllUpcomingInterviewSchedules());
 	}
+
+	@PostMapping("/setInterviewResults")
+	public ResponseEntity<?> setInterviewResults(@RequestBody InterviewResultRequest interviewResultRequest) {
+		if (jobService.setInterviewResults(interviewResultRequest)) {
+			return ResponseEntity.ok(new SimpleBooleanResponse(true));
+		} else {
+			return ResponseEntity.ok(new SimpleErrorResponse(jobService.getLastErrorCode(), jobService.getLastErrorMessage()));
+		}
+	}
 }

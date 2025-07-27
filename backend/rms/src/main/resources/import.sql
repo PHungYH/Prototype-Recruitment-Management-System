@@ -71,16 +71,6 @@ CREATE TABLE job_openings (
     CONSTRAINT fk_job_openings_departments FOREIGN KEY (dept_id) REFERENCES departments(dept_id)
 );
 
--- JOB SALARY BUDGETS table
-CREATE TABLE job_salary_budgets (
-    job_sal_budget_id INT PRIMARY KEY AUTO_INCREMENT,
-    job_id INT UNIQUE NOT NULL, 
-    salary_from DECIMAL(10, 2) NOT NULL,
-    salary_to DECIMAL(10, 2) NOT NULL,
-    CONSTRAINT fk_job_salary_budgets_job_openings FOREIGN KEY (job_id) REFERENCES job_openings(job_id),
-    CONSTRAINT chk_salary_range CHECK (salary_to >= salary_from)
-);
-
 -- APPLICATION STATUS table
 CREATE TABLE application_status (
     status_id INT PRIMARY KEY AUTO_INCREMENT,
@@ -99,20 +89,4 @@ CREATE TABLE job_applications (
     CONSTRAINT fk_job_applications_job_openings FOREIGN KEY (job_id) REFERENCES job_openings(job_id),
     CONSTRAINT fk_job_applications_applicants FOREIGN KEY (appl_id) REFERENCES applicants(appl_id),
     CONSTRAINT fk_job_applications_status_id FOREIGN KEY (status_id) REFERENCES application_status(status_id)
-);
-
--- FOLLOWUPS table
-CREATE TABLE followups (
-    followup_id INT PRIMARY KEY AUTO_INCREMENT,
-    admin_id INT NOT NULL, 
-    job_application_id INT NOT NULL,
-    CONSTRAINT fk_followups_admins FOREIGN KEY (admin_id) REFERENCES admins(admin_id),
-    CONSTRAINT fk_followups_job_applications FOREIGN KEY (job_application_id) REFERENCES job_applications(job_application_id) 
-);
-
--- MIGRATION table
-CREATE TABLE migrations (
-    migration_id INT PRIMARY KEY AUTO_INCREMENT,
-    appl_id INT NOT NULL,
-    CONSTRAINT fk_migrations_applicants FOREIGN KEY (appl_id) REFERENCES applicants(appl_id)
 );

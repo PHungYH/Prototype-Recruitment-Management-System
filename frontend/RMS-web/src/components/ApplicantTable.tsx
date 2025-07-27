@@ -23,6 +23,7 @@ import AdminManageViewProfileDialog from './AdminManageViewProfileDialog';
 import type { ProfileResponse } from '../commonInterface/Applicant.interface';
 import AdminManageNewInterviewDialog from './AdminManageNewInterviewDialog';
 import { TimeHelper } from '../utils/TimeHelper';
+import AdminManageNewResultDialog from './AdminManageNewResultDialog';
 
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -165,7 +166,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 }
 interface EnhancedTableToolbarProps {
   numSelected: number;
-  onSetNewStatus: React.Dispatch<React.SetStateAction<boolean>>;
+  onSetNewResult: React.Dispatch<React.SetStateAction<boolean>>;
   onSetNewInterview: React.Dispatch<React.SetStateAction<boolean>>;
   onSetViewProfile: React.Dispatch<React.SetStateAction<boolean>>;
   setShowApplicantTable: React.Dispatch<React.SetStateAction<boolean>>;
@@ -209,13 +210,13 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
         <div className='flex flex-row'>
           {numSelected === 1 ? (
             <>
-              <Button variant='text' onClick={() => props.onSetNewStatus(true)}>New Status</Button>
+              <Button variant='text' onClick={() => props.onSetNewResult(true)}>New Result</Button>
               <Button variant='text' onClick={() => props.onSetNewInterview(true)}>New Interview</Button>
               <Button variant='text' onClick={() => props.onSetViewProfile(true)}>View Profile</Button>
             </>
           ) : (
             <>
-              <Button variant='text' onClick={() => props.onSetNewStatus(true)}>New Status</Button>
+              <Button variant='text' onClick={() => props.onSetNewResult(true)}>New Result</Button>
               <Button variant='text' onClick={() => props.onSetNewInterview(true)}>New Interview</Button>
             </>
           )}
@@ -239,7 +240,7 @@ export default function ApplicantTable(props: ApplicantTableProps) {
   const [rowsProfile, setRowsProfile] = React.useState<Map<number, ProfileResponse>>(new Map<number, ProfileResponse>);
   const [showApplicantProfileDialog, setShowApplicantProfileDialog] = React.useState(false);
   const [showNewInterviewDialog, setShowNewInterviewDialog] = React.useState(false);
-  const [showNewStatusDialog, setShowNewStatusDialog] = React.useState(false);
+  const [showNewResultDialog, setShowNewResultDialog] = React.useState(false);
   
   React.useEffect(() => {
     fetchData();
@@ -329,10 +330,6 @@ export default function ApplicantTable(props: ApplicantTableProps) {
     setPage(0);
   };
 
-  const handleNewStatus = () => {
-    console.log(selected);
-  }
-
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
@@ -361,9 +358,16 @@ export default function ApplicantTable(props: ApplicantTableProps) {
           jobApplicationIds={selected}
           dataRefresher={fetchData}/>}
 
+      {showNewResultDialog && 
+        <AdminManageNewResultDialog 
+          toggleSetter={setShowNewResultDialog} 
+          toggle={showNewResultDialog}
+          jobApplicationIds={selected}
+          dataRefresher={fetchData}/>}
+
       <Paper sx={{ width: '100%', mb: 2 }}>
         <EnhancedTableToolbar numSelected={selected.length} 
-          onSetNewStatus={handleNewStatus} 
+          onSetNewResult={setShowNewResultDialog} 
           onSetNewInterview={setShowNewInterviewDialog} 
           onSetViewProfile={setShowApplicantProfileDialog}
           setShowApplicantTable={props.setShowApplicantTable}/>

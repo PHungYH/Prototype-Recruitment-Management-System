@@ -68,12 +68,6 @@ INSERT INTO job_openings (job_title, emp_type_id, dept_id, job_description, job_
 ('Content Writer 24', 1, 1, 'Write blog posts and marketing copy.', 'SEO writing, grammar, storytelling', '2025-06-25', TRUE),
 ('IT Support Specialist 25', 1, 2, 'Provide technical support and troubleshoot issues.', 'Windows, networking, customer service', '2025-06-28', TRUE);
 
--- Insert job salary budgets
-INSERT INTO job_salary_budgets (job_id, salary_from, salary_to) VALUES 
-(1, 25000.00, 40000.00),
-(2, 18000.00, 25000.00),
-(3, 8000.00, 12000.00);
-
 -- Insert application status
 INSERT INTO application_status (status_name) VALUES 
 ('Applied'),
@@ -87,13 +81,3 @@ INSERT INTO job_applications (job_id, appl_id, applied_time, status_id) VALUES
 (1, 1, '2025-06-20 12:00:00', 1),
 (2, 2, '2025-06-21 12:00:00', 2),
 (3, 3, '2025-06-22 12:00:00', 1);
-
--- Insert followups
-INSERT INTO followups (admin_id, job_application_id) VALUES
-(3, 1);
-
--- Insert migrations
-INSERT INTO migrations (appl_id) VALUES 
-(1),
-(2),
-(3);

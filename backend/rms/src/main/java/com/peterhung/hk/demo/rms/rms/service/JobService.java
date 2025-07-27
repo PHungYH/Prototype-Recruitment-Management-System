@@ -13,10 +13,12 @@ import org.springframework.stereotype.Service;
 
 import com.peterhung.hk.demo.rms.rms.controller.AuthController;
 import com.peterhung.hk.demo.rms.rms.dto.request.InterviewRequest;
+import com.peterhung.hk.demo.rms.rms.dto.request.InterviewResultRequest;
 import com.peterhung.hk.demo.rms.rms.dto.request.JobOpeningAddUpdateRequest;
 import com.peterhung.hk.demo.rms.rms.dto.response.InterviewStruct;
 import com.peterhung.hk.demo.rms.rms.exceptions.InvalidJobApplicationException;
 import com.peterhung.hk.demo.rms.rms.model.Applicant;
+import com.peterhung.hk.demo.rms.rms.model.ApplicationStatus;
 import com.peterhung.hk.demo.rms.rms.model.Department;
 import com.peterhung.hk.demo.rms.rms.model.EmploymentType;
 import com.peterhung.hk.demo.rms.rms.model.JobApplication;
@@ -87,7 +89,7 @@ public class JobService {
 		application.setJobOpening(jobOpening.get());
 		application.setApplicant(applicant);
 		application.setAppliedTime(ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime());
-		application.setStatus(applicationStatusRepository.findById(1).get());
+		application.setStatus(applicationStatusRepository.findByName("Applied"));
 		jobApplicationRepository.save(application);
 
 		return true;
@@ -206,6 +208,26 @@ public class JobService {
 		// Deactivate the job opening
 		jobOpening.get().setActive(false);
 		jobOpeningRepository.save(jobOpening.get());
+		return true;
+	}
+
+	public boolean setInterviewResults(InterviewResultRequest interviewResultRequest) {
+		ArrayList<JobApplication> applications = new ArrayList<>();
+		for (int jobId : interviewResultRequest.getJobApplicationIds()) {
+			Optional<JobApplication> application = jobApplicationRepository.findById(jobId);
+			if (application.isEmpty()) {
+				lastErrorCode = 7;
+				return false;
+			}
+			applications.add(application.get());
+		}
+
+		ApplicationStatus resultStatus = interviewResultRequest.isOffer()? applicationStatusRepository.findByName("Offered") : applicationStatusRepository.findByName("Rejected");
+		for (JobApplication application : applications) {
+			application.setStatus(resultStatus);
+			jobApplicationRepository.save(application);
+		}
+
 		return true;
 	}
 
