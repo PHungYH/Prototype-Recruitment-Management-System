@@ -21,14 +21,12 @@ const AdminPanel:React.FC<AdminPanelProps> = ({page}) => {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [showJobApplications, setShowJobApplications] = useState(false);
-  const [showFollowupHistory, setShowFollowupHistory] = useState(false);
 
   useAuthGuardPostLogin();
 
   const loadContent = (label: string) => {
     // Reset all components
     setShowJobApplications(false);
-    setShowFollowupHistory(false);
 
     navigate(`/${appGlobal.userType_ADMIN.toLowerCase()}/${label}`)
     // Show component by label
@@ -36,15 +34,11 @@ const AdminPanel:React.FC<AdminPanelProps> = ({page}) => {
       case 'job_applications':
         setShowJobApplications(true);
         break;
-      case 'followup_history':
-        setShowFollowupHistory(true);
-        break;
     }
   };
 
   const navButtons = [
-    { label: 'Job Applications', onClick: () => loadContent('job_applications') },
-    { label: 'Follow-up History', onClick: () => loadContent('followup_history') }
+    { label: 'Job Applications', onClick: () => loadContent('job_applications') }
   ];
 
   useEffect(() => {
